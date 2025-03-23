@@ -14,17 +14,40 @@ jobs:
       - name: 📥 Checkout Repository
         uses: actions/checkout@v3
 
+      - name: 🧠 Skip if no LaTeX files changed
+        id: check_changes
+        run: |
+          echo "Checking if .tex or .sty files changed..."
+          git fetch origin master
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '\.tex$|\.sty$')
+          if [ -z "$CHANGED" ]; then
+            echo "No .tex or .sty files changed. Skipping build."
+            echo "should_skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "LaTeX-related changes detected."
+            echo "should_skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: ⛔ Skip Build
+        if: steps.check_changes.outputs.should_skip == 'true'
+        run: |
+          echo "Nothing to do. Exiting early."
+          exit 0
+
       - name: 🧱 Set up LaTeX
+        if: steps.check_changes.outputs.should_skip == 'false'
         uses: xu-cheng/latex-action@v3
         with:
           root_file: resume.tex
 
       - name: 📁 Move PDF to docs/
+        if: steps.check_changes.outputs.should_skip == 'false'
         run: |
           mkdir -p docs
           mv resume.pdf docs/resume.pdf
 
       - name: 🔍 Check if resume.pdf has changed
+        if: steps.check_changes.outputs.should_skip == 'false'
         id: check_diff
         run: |
           if git diff --quiet docs/resume.pdf; then
@@ -52,4 +75,5 @@ jobs:
           git push
 
       - name: ✅ Done
+        if: steps.check_changes.outputs.should_skip == 'false'
         run: echo "Workflow complete."
