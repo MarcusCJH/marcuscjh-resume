@@ -16,25 +16,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🧠 Skip if no LaTeX files changed
+      - name: 🧠 Check for LaTeX-related changes
         id: check_changes
+        continue-on-error: true
         run: |
-          echo "Checking if .tex or .sty files changed..."
-          git fetch origin master
-          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '\.tex$|\.sty$')
+          echo "Checking for LaTeX-related changes..."
+          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '\.tex$|\.sty$|sections/|styles/' || true)
           if [ -z "$CHANGED" ]; then
-            echo "No .tex or .sty files changed. Skipping build."
+            echo "No relevant LaTeX changes."
             echo "should_skip=true" >> $GITHUB_OUTPUT
           else
-            echo "LaTeX-related changes detected."
+            echo "Changes detected."
             echo "should_skip=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: ⛔ Skip Build
+      - name: ⛔ Skip Build (no changes)
         if: steps.check_changes.outputs.should_skip == 'true'
         run: |
-          echo "Nothing to do. Exiting early."
-          exit 0
+          echo "✅ Skipping build: No LaTeX file changes."
 
       - name: 🧱 Set up LaTeX
         if: steps.check_changes.outputs.should_skip == 'false'
@@ -65,15 +64,13 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "marcuschanjh@gmail.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
       - name: 📝 Commit and Push resume.pdf
         if: steps.check_diff.outputs.changed == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git add docs/resume.pdf
           git commit -m "[AUTO] Update resume.pdf"
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git push
 
       - name: ✅ Done
