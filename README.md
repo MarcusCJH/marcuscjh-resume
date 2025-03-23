@@ -39,15 +39,16 @@ pdflatex resume.tex
 
 ```
 .
-├── resume.tex              # Main LaTeX entry point
-├── sections/               # Modular content sections
-│   ├── header.tex          # Contact information
-│   ├── education.tex       # Academic background
-│   ├── experience.tex      # Professional experience
-│   ├── skills.tex          # Technical skills
-│   └── projects.tex        # Project highlights
-├── styles/                 # Design and formatting
-│   └── formatting.sty      # LaTeX style definitions
+├── src/
+│   ├── resume.tex          # Main LaTeX entry point
+│   └── sections/           # Modular content sections
+│       ├── header.tex          # Contact information
+│       ├── education.tex       # Academic background
+│       ├── experience.tex      # Professional experience
+│       ├── skills.tex          # Technical skills
+│       └── projects.tex        # Project highlights
+│   └── styles/             # Design and formatting
+│       └── formatting.sty  # LaTeX style definitions
 ├── docs/                   # Public assets
 │   ├── index.html          # Landing page
 │   └── resume.pdf          # Latest build

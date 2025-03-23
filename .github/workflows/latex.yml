@@ -45,7 +45,7 @@ jobs:
         if: steps.check_changes.outputs.should_skip == 'false'
         run: |
           mkdir -p docs
-          mv resume.pdf docs/resume.pdf
+          mv src/resume.pdf docs/resume.pdf
 
       - name: 🔍 Check if resume.pdf has changed
         if: steps.check_changes.outputs.should_skip == 'false'
