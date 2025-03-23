@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Marcus CJH — Resume</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        /* Centered layout */
+        #landing {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 2em;
+        }
+
+        .resume-box {
+            background-color: #fff;
+            padding: 2em 3em;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            margin-top: 1em;
+            margin-right: 1em;
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #2d7ff9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #1a5fcd;
+        }
+
+        /* Side-by-side layout */
+        #preview {
+            display: none;
+            height: 100vh;
+        }
+
+        .preview-layout {
+            display: flex;
+            height: 100%;
+        }
+
+        .left {
+            width: 35%;
+            background-color: #ffffff;
+            padding: 3em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .right {
+            width: 65%;
+            background-color: #e9ecef;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .preview-layout {
+                flex-direction: column;
+            }
+
+            .left,
+            .right {
+                width: 100%;
+                height: auto;
+            }
+
+            iframe {
+                height: 80vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Initial centered landing screen -->
+<div id="landing">
+    <div class="resume-box">
+        <h1>MarcusCJH</h1>
+        <a href="resume.pdf" download class="btn">📥 Download Resume</a>
+        <button class="btn" onclick="showPreview()">👁️ Preview Resume</button>
+    </div>
+</div>
+
+<!-- Side-by-side preview layout -->
+<div id="preview">
+    <div class="preview-layout">
+        <div class="left">
+            <h1>Marcus CJH</h1>
+            <a href="resume.pdf" download class="btn">📥 Download PDF</a>
+            <button class="btn" onclick="hidePreview()">❌ Close Preview</button>
+        </div>
+        <div class="right">
+            <iframe src="resume.pdf" title="Marcus CJH Resume PDF Preview"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showPreview() {
+        document.getElementById('landing').style.display = 'none';
+        document.getElementById('preview').style.display = 'block';
+    }
+
+    function hidePreview() {
+        document.getElementById('preview').style.display = 'none';
+        document.getElementById('landing').style.display = 'flex';
+    }
+</script>
+
+</body>
+</html>
