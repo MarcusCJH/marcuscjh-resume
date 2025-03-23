@@ -40,6 +40,7 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: src/resume.tex
+          working_directory: src
 
       - name: 📁 Move PDF to docs/
         if: steps.check_changes.outputs.should_skip == 'false'
