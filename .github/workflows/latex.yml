@@ -39,7 +39,7 @@ jobs:
         if: steps.check_changes.outputs.should_skip == 'false'
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: src/resume.tex
+          root_file: resume.tex
           working_directory: src
 
       - name: 📁 Move PDF to docs/
