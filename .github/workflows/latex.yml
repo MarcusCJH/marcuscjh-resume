@@ -70,7 +70,7 @@ jobs:
         if: steps.check_diff.outputs.changed == 'true'
         run: |
           git add docs/resume.pdf
-          git commit -m "[AUTO] Update resume.pdf"
+          git commit -m "[GA] Update resume.pdf"
           git push
 
       - name: ✅ Done
