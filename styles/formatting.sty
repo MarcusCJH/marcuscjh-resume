@@ -1,0 +1,40 @@
+\ProvidesPackage{styles/formatting}
+
+% Required Packages
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{geometry}
+\RequirePackage{hyperref}
+\RequirePackage{fontawesome}
+\RequirePackage{titlesec}
+\RequirePackage{enumitem}
+
+% Page Formatting
+\geometry{
+    a4paper,
+    top=2cm,
+    bottom=2cm,
+    left=2cm,
+    right=2cm
+}
+
+% Section Formatting
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{12pt}{8pt}
+
+% Hyperlink Formatting
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+
+% Custom Commands
+\newcommand{\sectionspace}{\vspace{8pt}}
+\newcommand{\subsectionspace}{\vspace{4pt}}
+
+% List Formatting
+\setlist[itemize]{leftmargin=*}
+\setlist[itemize,1]{label={}}
+\setlist[itemize,2]{label={\textbullet}} 

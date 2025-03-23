@@ -1,0 +1,55 @@
+name: Build and Deploy LaTeX Resume
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    name: 🛠️ Build & Deploy Resume
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🧱 Set up LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: resume.tex
+
+      - name: 📁 Move PDF to docs/
+        run: |
+          mkdir -p docs
+          mv resume.pdf docs/resume.pdf
+
+      - name: 🔍 Check if resume.pdf has changed
+        id: check_diff
+        run: |
+          if git diff --quiet docs/resume.pdf; then
+            echo "No changes in PDF"
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "PDF has changed"
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: ⚙️ Configure Git
+        if: steps.check_diff.outputs.changed == 'true'
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "marcuschanjh@gmail.com"
+
+      - name: 📝 Commit and Push resume.pdf
+        if: steps.check_diff.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git add docs/resume.pdf
+          git commit -m "[AUTO] Update resume.pdf"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+          git push
+
+      - name: ✅ Done
+        run: echo "Workflow complete."
