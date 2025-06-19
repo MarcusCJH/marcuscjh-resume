@@ -21,7 +21,7 @@ A professionally crafted, modular LaTeX resume with automated builds and live pr
 ### Prerequisites
 
 - LaTeX distribution (TeX Live or MiKTeX)
-- LaTeX editor (recommended)
+- XeLaTeX engine (recommended for best font support)
 
 ### Quick Start
 
@@ -32,7 +32,7 @@ git clone https://github.com/yourusername/your-resume-repo.git
 
 2. Compile the resume
 ```bash
-pdflatex resume.tex
+xelatex -output-directory=out -aux-directory=auxil -include-directory=src src/resume.tex
 ```
 
 ## 📁 Project Structure
@@ -55,38 +55,63 @@ pdflatex resume.tex
 └── .github/workflows       # CI/CD configuration
 ```
 
+## 🎨 Template Features
+
+### Page Break Controls
+- **`\newpagesection{Title}`** - Start section on new page
+- **`\pagebreakhere`** - Force page break
+- **`\smartpagebreak`** - Fill current page then break
+- **`\moderndivider`** - Visual section separator
+
+### Professional Elements
+- **Color-coded sections** with professional blue theme
+- **Achievement-focused bullets** with arrow indicators
+- **Professional summary box** for key highlights
+- **Clean contact layout** with social links
+- **Skill categorization** for easy scanning
+
+## 📝 Customization Guide
+
+### Content Updates
+1. **Personal Information**: Update `sections/header.tex`
+2. **Professional Summary**: Modify the summary in `resume.tex`
+3. **Experience**: Add your roles in `sections/experience.tex`
+4. **Projects**: Showcase your work in `sections/projects.tex`
+5. **Skills**: List your technologies in `sections/skills.tex`
+6. **Education**: Update academic info in `sections/education.tex`
+
+### Layout Control
+```latex
+% Example: Move Technical Skills to new page
+\newpagesection{Technical Skills}
+
+% Example: Add page break before Education
+\pagebreakhere
+\input{sections/education}
+```
+
+### Optional Sections
+The template includes ready-to-use sections for:
+- Certifications & Awards
+- Publications & Talks
+- Additional achievements
+
+## 🔧 Compilation Tips
+
+- Use **XeLaTeX** for best results with FontAwesome icons
+- Output directory structure keeps files organized
+- Compile twice if references seem off
+
 ## 📦 Dependencies
 
-Required LaTeX packages (managed in `styles/formatting.sty`):
-- `inputenc` - Input encoding
-- `fontenc` - Font encoding
+Core LaTeX packages (auto-managed):
 - `geometry` - Page layout
-- `hyperref` - PDF metadata and links
-- `fontawesome` - Icons
-- `titlesec` - Section formatting
-- `enumitem` - List customization
+- `xcolor` - Professional color scheme
+- `fontawesome` - Contact icons
+- `hyperref` - Clickable links
+- `enumitem` - List formatting
 
-## 🔄 CI/CD Pipeline
-
-The automated workflow:
-1. Monitors changes in LaTeX source files
-2. Triggers builds for relevant updates
-3. Deploys to GitHub Pages
-
-## 🎨 Customization Guide
-
-1. **Content Updates**:
-   - Modify section files in `sections/`
-   - Update personal information in `header.tex`
-
-2. **Style Changes**:
-   - Adjust formatting in `styles/formatting.sty`
-   - Customize page layout in `resume.tex`
-
-3. **Preview Changes**:
-   - Compile locally for immediate feedback
-   - Wait for CI/CD pipeline for production build
-
+---
 
 <div align="center">
 Made with ❤️ by Marcus
