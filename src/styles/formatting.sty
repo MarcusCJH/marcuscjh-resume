@@ -6,35 +6,179 @@
 \RequirePackage{geometry}
 \RequirePackage{hyperref}
 \RequirePackage{fontawesome}
-\RequirePackage{titlesec}
 \RequirePackage{enumitem}
+\RequirePackage{xcolor}
+\RequirePackage{array}
 
 % Page Formatting
 \geometry{
     a4paper,
-    top=2cm,
-    bottom=2cm,
-    left=2cm,
-    right=2cm
+    top=1.2cm,
+    bottom=1.2cm,
+    left=1.4cm,
+    right=1.4cm
 }
 
-% Section Formatting
-\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}[\titlerule]
-\titlespacing*{\section}{0pt}{12pt}{8pt}
+% Colors
+\definecolor{primaryblue}{RGB}{0,51,102}
+\definecolor{secondaryblue}{RGB}{51,102,153}
+\definecolor{textgray}{RGB}{70,70,70}
+\definecolor{lightgray}{RGB}{130,130,130}
+\definecolor{backgroundgray}{RGB}{248,249,250}
+
+% Font Settings
+\renewcommand{\familydefault}{\sfdefault}
 
 % Hyperlink Formatting
 \hypersetup{
     colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,
-    urlcolor=cyan,
+    linkcolor=primaryblue,
+    filecolor=primaryblue,
+    urlcolor=primaryblue,
+    pdfborder={0 0 0}
+}
+
+% Custom Section Command
+\newcommand{\customsection}[1]{
+    \vspace{14pt}
+    {\color{primaryblue}\Large\bfseries #1}
+    \vspace{2pt}
+    
+    {\color{primaryblue}\rule{\textwidth}{1pt}}
+    \vspace{6pt}
+}
+
+% Page Break Commands
+\newcommand{\newpagesection}[1]{
+    \newpage
+    \customsection{#1}
+}
+
+\newcommand{\pagebreakhere}{\newpage}
+
+% Better page break control
+\newcommand{\smartpagebreak}{
+    \vfill
+    \pagebreak
 }
 
 % Custom Commands
-\newcommand{\sectionspace}{\vspace{8pt}}
-\newcommand{\subsectionspace}{\vspace{4pt}}
+\newcommand{\sectionspace}{\vspace{10pt}}
+
+% Resume Item Commands
+\newcommand{\resumeItem}[1]{
+    \item\small{#1}
+}
+
+\newcommand{\resumeSubheading}[4]{
+    \item
+    \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
+        \textbf{\color{primaryblue}#1} & \textcolor{lightgray}{\small #2} \\
+        \textit{\color{secondaryblue}\small #3} & \textcolor{lightgray}{\small #4} \\
+    \end{tabular*}
+    \vspace{2pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
+        \textbf{\color{primaryblue}#1} & \textcolor{lightgray}{\small #2} \\
+    \end{tabular*}
+    \vspace{2pt}
+}
+
+% Skills category command
+\newcommand{\skillCategory}[2]{
+    \resumeItem{\textbf{\color{primaryblue}#1:} #2}
+}
+
+% Achievement item with arrow
+\newcommand{\achievementItem}[1]{
+    \resumeItem{$\triangleright$ #1}
+}
 
 % List Formatting
-\setlist[itemize]{leftmargin=*}
-\setlist[itemize,1]{label={}}
-\setlist[itemize,2]{label={\textbullet}} 
+\setlist[itemize]{
+    leftmargin=0.15in,
+    label={},
+    itemsep=0pt,
+    parsep=0pt,
+    topsep=0pt,
+    partopsep=0pt
+}
+
+\setlist[itemize,2]{
+    leftmargin=0.2in,
+    label={\textcolor{primaryblue}{\textbullet}},
+    itemsep=2pt
+}
+
+% Professional summary box
+\newcommand{\professionalsummary}[1]{
+    \begin{center}
+        \colorbox{backgroundgray}{
+            \begin{minipage}{0.95\textwidth}
+                \centering
+                \vspace{8pt}
+                \textit{#1}
+                \vspace{8pt}
+            \end{minipage}
+        }
+    \end{center}
+    \vspace{8pt}
+}
+
+% Modern divider
+\newcommand{\moderndivider}{
+    \vspace{6pt}
+    \begin{center}
+        \textcolor{lightgray}{\rule{0.7\textwidth}{0.5pt}}
+    \end{center}
+    \vspace{6pt}
+}
+
+% Remove paragraph indentation
+\setlength{\parindent}{0pt}
+
+% Education entry command
+\newcommand{\educationEntry}[5]{
+    \resumeSubheading{#1}{#2}{#3}{#4}
+    \ifthenelse{\equal{#5}{}}{}{\vspace{2pt}\small\textit{\color{textgray}#5}}
+}
+
+% Certification/Award command
+\newcommand{\certificationItem}[3]{
+    \item
+    \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
+        \textbf{\color{primaryblue}#1} & \textcolor{lightgray}{\small #2} \\
+        \textit{\color{textgray}\small #3} & \\
+    \end{tabular*}
+    \vspace{-2pt}
+}
+
+% Contact separator
+\newcommand{\contactsep}{\quad\textcolor{lightgray}{|}\quad}
+
+% Skill level indicators (optional)
+\newcommand{\skillLevel}[2]{
+    \textbf{\color{primaryblue}#1:} \color{textgray}#2
+}
+
+% Header name command
+\newcommand{\headername}[1]{
+    {\Huge\bfseries\color{primaryblue} #1}
+}
+
+% Header title command
+\newcommand{\headertitle}[1]{
+    {\large\color{textgray} #1}
+}
+
+% Contact info command
+\newcommand{\contactinfo}[5]{
+    \href{mailto:#1}{\faEnvelope\ #1} \quad
+    \href{tel:#2}{\faPhone\ #2} \quad
+    \href{https://github.com/#3}{\faGithub\ #3} \quad
+    \href{https://linkedin.com/in/#4}{\faLinkedin\ #4} \quad
+    \href{https://#5}{\faGlobe\ #5}
+} 
