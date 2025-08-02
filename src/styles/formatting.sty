@@ -10,13 +10,13 @@
 \RequirePackage{xcolor}
 \RequirePackage{array}
 
-% Page Formatting
+% Compact Page Formatting
 \geometry{
     a4paper,
-    top=1.2cm,
-    bottom=1.2cm,
-    left=1.4cm,
-    right=1.4cm
+    top=1.0cm,
+    bottom=1.0cm,
+    left=1.5cm,
+    right=1.5cm
 }
 
 % Colors
@@ -38,14 +38,14 @@
     pdfborder={0 0 0}
 }
 
-% Custom Section Command
+% Compact Custom Section Command
 \newcommand{\customsection}[1]{
-    \vspace{14pt}
+    \vspace{10pt}
     {\color{primaryblue}\Large\bfseries #1}
     \vspace{2pt}
     
     {\color{primaryblue}\rule{\textwidth}{1pt}}
-    \vspace{6pt}
+    \vspace{4pt}
 }
 
 % Page Break Commands
@@ -62,12 +62,12 @@
     \pagebreak
 }
 
-% Custom Commands
-\newcommand{\sectionspace}{\vspace{10pt}}
+% Compact Commands
+\newcommand{\sectionspace}{\vspace{6pt}}
 
-% Resume Item Commands
+% Enhanced Resume Item Commands
 \newcommand{\resumeItem}[1]{
-    \item\small{#1}
+    \item\small\color{textgray}{#1}
 }
 
 \newcommand{\resumeSubheading}[4]{
@@ -76,7 +76,7 @@
         \textbf{\color{primaryblue}#1} & \textcolor{lightgray}{\small #2} \\
         \textit{\color{secondaryblue}\small #3} & \textcolor{lightgray}{\small #4} \\
     \end{tabular*}
-    \vspace{2pt}
+    \vspace{1pt}
 }
 
 \newcommand{\resumeProjectHeading}[2]{
@@ -84,22 +84,27 @@
     \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
         \textbf{\color{primaryblue}#1} & \textcolor{lightgray}{\small #2} \\
     \end{tabular*}
-    \vspace{2pt}
+    \vspace{1pt}
 }
 
-% Skills category command
+% Enhanced Skills category command
 \newcommand{\skillCategory}[2]{
-    \resumeItem{\textbf{\color{primaryblue}#1:} #2}
+    \resumeItem{\textbf{\color{primaryblue}#1:} \color{textgray}#2}
 }
 
-% Achievement item with arrow
+% Enhanced Achievement item with arrow
 \newcommand{\achievementItem}[1]{
-    \resumeItem{$\triangleright$ #1}
+    \item\small\color{textgray}{\textcolor{primaryblue}{$\triangleright$} #1}
 }
 
-% List Formatting
+% Professional achievement with metrics
+\newcommand{\achievementWithMetric}[2]{
+    \item\small\color{textgray}{\textcolor{primaryblue}{$\triangleright$} #1 \textbf{\color{secondaryblue}(#2)}}
+}
+
+% Compact List Formatting
 \setlist[itemize]{
-    leftmargin=0.15in,
+    leftmargin=0.1in,
     label={},
     itemsep=0pt,
     parsep=0pt,
@@ -108,9 +113,9 @@
 }
 
 \setlist[itemize,2]{
-    leftmargin=0.2in,
-    label={\textcolor{primaryblue}{\textbullet}},
-    itemsep=2pt
+    leftmargin=0.15in,
+    label={},
+    itemsep=1pt
 }
 
 % Professional summary box

@@ -18,11 +18,7 @@
 \input{sections/header}
 
 % Professional Summary
-\professionalsummary{
-    Passionate Software Engineer with 3+ years of experience building scalable web applications. 
-    Expertise in full-stack development with modern technologies including React, Node.js, and cloud platforms. 
-    Proven track record of delivering high-quality solutions and leading technical initiatives.
-}
+\input{sections/summary}
 
 % Experience Section
 \input{sections/experience}
@@ -35,32 +31,8 @@
 % ==================== PAGE 2 ====================
 % PAGE BREAK STRATEGIES - Choose one of the following:
 
-% Option 1: Force new page for Technical Skills (CURRENT)
-\newpagesection{Technical Skills}
-
-% Option 2: Smart page break (fills current page, then breaks)
-% \smartpagebreak
-% \customsection{Technical Skills}
-
-% Option 3: Simple page break
-% \pagebreakhere
-% \customsection{Technical Skills}
-
-% Option 4: No page break (let LaTeX decide)
-% \moderndivider
-% \input{sections/skills}
-
-% Technical Skills Content
-\begin{itemize}
-    \skillCategory{Programming Languages}{JavaScript, Python, Java, TypeScript, C++}
-    \skillCategory{Frontend Technologies}{React, Vue.js, Angular, HTML5, CSS3, SASS/SCSS}
-    \skillCategory{Backend Technologies}{Node.js, Express.js, Django, Flask, Spring Boot}
-    \skillCategory{Databases}{PostgreSQL, MongoDB, MySQL, Redis, SQLite}
-    \skillCategory{Cloud \& DevOps}{AWS, Docker, Kubernetes, CI/CD, Jenkins, GitHub Actions}
-    \skillCategory{Tools \& Other}{Git, VS Code, Postman, Figma, Agile/Scrum}
-\end{itemize}
-
-\sectionspace
+% Technical Skills Section
+\input{sections/skills}
 
 \moderndivider
 
@@ -69,29 +41,10 @@
 
 % ==================== OPTIONAL SECTIONS ====================
 
-% Option A: Certifications on same page
+% Certifications Section
 \moderndivider
-\customsection{Certifications \& Awards}
-\begin{itemize}
-    \resumeSubheading{AWS Certified Solutions Architect}{2023}{Amazon Web Services}{Valid until 2026}
-    \resumeSubheading{Professional Scrum Master I}{2022}{Scrum.org}{Credential ID: 1234567}
-\end{itemize}
-\sectionspace
+\input{sections/certifications}
 
-% Option B: Certifications on new page (uncomment if you have many certifications)
-% \newpagesection{Certifications \& Awards}
-% \begin{itemize}
-%     \resumeSubheading{AWS Certified Solutions Architect}{2023}{Amazon Web Services}{Valid until 2026}
-%     \resumeSubheading{Professional Scrum Master I}{2022}{Scrum.org}{Credential ID: 1234567}
-%     \resumeSubheading{Google Cloud Professional Developer}{2022}{Google Cloud}{Valid until 2024}
-% \end{itemize}
-% \sectionspace
 
-% Option C: Additional sections (uncomment as needed)
-% \moderndivider
-% \customsection{Publications \& Talks}
-% \begin{itemize}
-%     \resumeSubheading{Conference Talk Title}{2023}{Tech Conference}{Location}
-% \end{itemize}
 
 \end{document} 
