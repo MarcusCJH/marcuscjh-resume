@@ -1,49 +1,31 @@
-% Enhanced Professional Resume Template
-% Optimized for Software Engineers & Full Stack Developers
-% Created by Marcus
-% License: MIT
+%-------------------------
+% Resume in Latex
+% Author : Marcus Chan
+% Based off of: https://github.com/jakegut/resume
+% License : MIT
+%------------------------
 
-\documentclass[11pt,a4paper]{article}
+\documentclass[letterpaper,11pt]{article}
 
 % Load custom formatting
 \usepackage{styles/formatting}
 
-% Document Start
 \begin{document}
 
-\pagestyle{empty}
-
-% ==================== PAGE 1 ====================
-% Header Section
+%----------HEADING----------
 \input{sections/header}
 
-% Professional Summary
-\input{sections/summary}
-
-% Experience Section
+%-----------EXPERIENCE-----------
 \input{sections/experience}
 
-\moderndivider
-
-% Projects Section
-\input{sections/projects}
-
-% ==================== PAGE 2 ====================
-% PAGE BREAK STRATEGIES - Choose one of the following:
-
-% Technical Skills Section
+%-----------PROGRAMMING SKILLS-----------
 \input{sections/skills}
 
-\moderndivider
-
-% Education Section
-\input{sections/education}
-
-% ==================== OPTIONAL SECTIONS ====================
-
-% Certifications Section
-\moderndivider
+%-----------CERTIFICATIONS-----------
 \input{sections/certifications}
+
+%-----------EDUCATION-----------
+\input{sections/education}
 
 
 

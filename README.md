@@ -3,6 +3,7 @@
 A professionally crafted, modular LaTeX resume with automated builds and live preview.
 
 [![View Resume](https://img.shields.io/badge/View%20Resume-PDF-blue)](https://marcuscjh.github.io/marcuscjh-resume/)
+[![Build Status](https://github.com/marcuscjh/marcuscjh-resume/workflows/Build%20and%20Deploy%20LaTeX%20Resume/badge.svg)](https://github.com/marcuscjh/marcuscjh-resume/actions)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 
@@ -27,12 +28,16 @@ A professionally crafted, modular LaTeX resume with automated builds and live pr
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/your-resume-repo.git
+git clone https://github.com/marcuscjh/marcuscjh-resume.git
 ```
 
 2. Compile the resume
 ```bash
-xelatex -output-directory=out -aux-directory=auxil -include-directory=src src/resume.tex
+# Using XeLaTeX (recommended)
+xelatex -output-directory=out -aux-directory=auxil src/resume.tex
+
+# Or using the GitHub Actions workflow (automatic)
+# Just push changes to master branch
 ```
 
 ## 📁 Project Structure
@@ -43,10 +48,12 @@ xelatex -output-directory=out -aux-directory=auxil -include-directory=src src/re
 │   ├── resume.tex          # Main LaTeX entry point
 │   └── sections/           # Modular content sections
 │       ├── header.tex          # Contact information
+│       ├── summary.tex         # Professional summary
 │       ├── education.tex       # Academic background
 │       ├── experience.tex      # Professional experience
 │       ├── skills.tex          # Technical skills
-│       └── projects.tex        # Project highlights
+│       ├── projects.tex        # Project highlights
+│       └── certifications.tex  # Certifications & awards
 │   └── styles/             # Design and formatting
 │       └── formatting.sty  # LaTeX style definitions
 ├── docs/                   # Public assets
@@ -90,11 +97,23 @@ xelatex -output-directory=out -aux-directory=auxil -include-directory=src src/re
 \input{sections/education}
 ```
 
-### Optional Sections
-The template includes ready-to-use sections for:
-- Certifications & Awards
-- Publications & Talks
-- Additional achievements
+### Advanced LaTeX Commands
+The template includes powerful custom commands:
+
+**Content Commands:**
+- `\resumeSubheading{Title}{Date}{Company}{Location}` - Professional experience entries
+- `\resumeProjectHeading{Project}{Date}` - Project entries
+- `\achievementItem{Achievement}` - Achievement with arrow indicator
+- `\achievementWithMetric{Achievement}{Metric}` - Achievement with metrics
+- `\certificationItem{Certification}{Date}{Issuer}` - Certification entries
+- `\educationEntry{Institution}{Date}{Degree}{Location}{Details}` - Education entries
+
+**Formatting Commands:**
+- `\skillCategory{Category}{Skills}` - Categorized skill listings
+- `\professionalsummary{Text}` - Professional summary box
+- `\moderndivider` - Visual section separator
+- `\contactinfo{Email}{Phone}{GitHub}{LinkedIn}{Website}` - Contact information
+
 
 ## 🔧 Compilation Tips
 

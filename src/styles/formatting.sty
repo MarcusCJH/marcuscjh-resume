@@ -1,189 +1,97 @@
 \ProvidesPackage{styles/formatting}
 
 % Required Packages
-\RequirePackage[utf8]{inputenc}
-\RequirePackage[T1]{fontenc}
-\RequirePackage{geometry}
-\RequirePackage{hyperref}
-\RequirePackage{fontawesome}
+\RequirePackage{latexsym}
+\RequirePackage[empty]{fullpage}
+\RequirePackage{titlesec}
+\RequirePackage{marvosym}
+\RequirePackage[usenames,dvipsnames]{color}
+\RequirePackage{verbatim}
 \RequirePackage{enumitem}
-\RequirePackage{xcolor}
-\RequirePackage{array}
+\RequirePackage[hidelinks]{hyperref}
+\RequirePackage{fancyhdr}
+\RequirePackage[english]{babel}
+\RequirePackage{tabularx}
+\RequirePackage{fontawesome}
+\RequirePackage{needspace}
+\input{glyphtounicode}
 
-% Compact Page Formatting
-\geometry{
-    a4paper,
-    top=1.0cm,
-    bottom=1.0cm,
-    left=1.5cm,
-    right=1.5cm
-}
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
 
-% Colors
-\definecolor{primaryblue}{RGB}{0,51,102}
-\definecolor{secondaryblue}{RGB}{51,102,153}
-\definecolor{textgray}{RGB}{70,70,70}
-\definecolor{lightgray}{RGB}{130,130,130}
-\definecolor{backgroundgray}{RGB}{248,249,250}
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
 
-% Font Settings
-\renewcommand{\familydefault}{\sfdefault}
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
 
-% Hyperlink Formatting
-\hypersetup{
-    colorlinks=true,
-    linkcolor=primaryblue,
-    filecolor=primaryblue,
-    urlcolor=primaryblue,
-    pdfborder={0 0 0}
-}
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
 
-% Compact Custom Section Command
-\newcommand{\customsection}[1]{
-    \vspace{10pt}
-    {\color{primaryblue}\Large\bfseries #1}
-    \vspace{2pt}
-    
-    {\color{primaryblue}\rule{\textwidth}{1pt}}
-    \vspace{4pt}
-}
+\urlstyle{same}
 
-% Page Break Commands
-\newcommand{\newpagesection}[1]{
-    \newpage
-    \customsection{#1}
-}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
 
-\newcommand{\pagebreakhere}{\newpage}
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
 
-% Better page break control
-\newcommand{\smartpagebreak}{
-    \vfill
-    \pagebreak
-}
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
 
-% Compact Commands
-\newcommand{\sectionspace}{\vspace{6pt}}
-
-% Enhanced Resume Item Commands
+%-------------------------
+% Custom commands
 \newcommand{\resumeItem}[1]{
-    \item\small\color{textgray}{#1}
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
 }
 
 \newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
     \item
-    \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
-        \textbf{\color{primaryblue}#1} & \textcolor{lightgray}{\small #2} \\
-        \textit{\color{secondaryblue}\small #3} & \textcolor{lightgray}{\small #4} \\
-    \end{tabular*}
-    \vspace{1pt}
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
 }
 
 \newcommand{\resumeProjectHeading}[2]{
     \item
-    \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
-        \textbf{\color{primaryblue}#1} & \textcolor{lightgray}{\small #2} \\
-    \end{tabular*}
-    \vspace{1pt}
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
 }
 
-% Enhanced Skills category command
-\newcommand{\skillCategory}[2]{
-    \resumeItem{\textbf{\color{primaryblue}#1:} \color{textgray}#2}
-}
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
 
-% Enhanced Achievement item with arrow
-\newcommand{\achievementItem}[1]{
-    \item\small\color{textgray}{\textcolor{primaryblue}{$\triangleright$} #1}
-}
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
 
-% Professional achievement with metrics
-\newcommand{\achievementWithMetric}[2]{
-    \item\small\color{textgray}{\textcolor{primaryblue}{$\triangleright$} #1 \textbf{\color{secondaryblue}(#2)}}
-}
-
-% Compact List Formatting
-\setlist[itemize]{
-    leftmargin=0.1in,
-    label={},
-    itemsep=0pt,
-    parsep=0pt,
-    topsep=0pt,
-    partopsep=0pt
-}
-
-\setlist[itemize,2]{
-    leftmargin=0.15in,
-    label={},
-    itemsep=1pt
-}
-
-% Professional summary box
-\newcommand{\professionalsummary}[1]{
-    \begin{center}
-        \colorbox{backgroundgray}{
-            \begin{minipage}{0.95\textwidth}
-                \centering
-                \vspace{8pt}
-                \textit{#1}
-                \vspace{8pt}
-            \end{minipage}
-        }
-    \end{center}
-    \vspace{8pt}
-}
-
-% Modern divider
-\newcommand{\moderndivider}{
-    \vspace{6pt}
-    \begin{center}
-        \textcolor{lightgray}{\rule{0.7\textwidth}{0.5pt}}
-    \end{center}
-    \vspace{6pt}
-}
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
 
 % Remove paragraph indentation
 \setlength{\parindent}{0pt}
-
-% Education entry command
-\newcommand{\educationEntry}[5]{
-    \resumeSubheading{#1}{#2}{#3}{#4}
-    \ifthenelse{\equal{#5}{}}{}{\vspace{2pt}\small\textit{\color{textgray}#5}}
-}
-
-% Certification/Award command
-\newcommand{\certificationItem}[3]{
-    \item
-    \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
-        \textbf{\color{primaryblue}#1} & \textcolor{lightgray}{\small #2} \\
-        \textit{\color{textgray}\small #3} & \\
-    \end{tabular*}
-    \vspace{-2pt}
-}
-
-% Contact separator
-\newcommand{\contactsep}{\quad\textcolor{lightgray}{|}\quad}
-
-% Skill level indicators (optional)
-\newcommand{\skillLevel}[2]{
-    \textbf{\color{primaryblue}#1:} \color{textgray}#2
-}
-
-% Header name command
-\newcommand{\headername}[1]{
-    {\Huge\bfseries\color{primaryblue} #1}
-}
-
-% Header title command
-\newcommand{\headertitle}[1]{
-    {\large\color{textgray} #1}
-}
-
-% Contact info command
-\newcommand{\contactinfo}[5]{
-    \href{mailto:#1}{\faEnvelope\ #1} \quad
-    \href{tel:#2}{\faPhone\ #2} \quad
-    \href{https://github.com/#3}{\faGithub\ #3} \quad
-    \href{https://linkedin.com/in/#4}{\faLinkedin\ #4} \quad
-    \href{https://#5}{\faGlobe\ #5}
-} 
