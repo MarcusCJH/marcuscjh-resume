@@ -65,7 +65,7 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "marcuschanjh@gmail.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git remote set-url origin https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
 
       - name: 📝 Commit and Push resume.pdf
         if: steps.check_diff.outputs.changed == 'true'
