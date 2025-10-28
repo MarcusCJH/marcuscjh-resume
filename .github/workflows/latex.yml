@@ -67,12 +67,31 @@ jobs:
           git config --global user.email "marcuschanjh@gmail.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
-      - name: 📝 Commit and Push resume.pdf
+      - name: 📝 Commit and Create Pull Request
         if: steps.check_diff.outputs.changed == 'true'
         run: |
+          # Create a new branch for the PDF update
+          BRANCH_NAME="update-resume-pdf-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b $BRANCH_NAME
+          
+          # Add and commit the PDF
           git add docs/resume.pdf
           git commit -m "[GA] Update resume.pdf"
-          git push
+          
+          # Push the new branch
+          git push origin $BRANCH_NAME
+          
+          # Create a pull request using GitHub API
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls \
+            -d '{
+              "title": "[GA] Update resume.pdf",
+              "body": "Automated resume PDF update from GitHub Actions",
+              "head": "'$BRANCH_NAME'",
+              "base": "master"
+            }'
 
       - name: ✅ Done
         if: steps.check_changes.outputs.should_skip == 'false'
