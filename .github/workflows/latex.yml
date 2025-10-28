@@ -9,6 +9,9 @@ jobs:
   build-and-deploy:
     name: 🛠️ Build & Deploy Resume
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: 📥 Checkout Repository
@@ -60,19 +63,20 @@ jobs:
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: ⚙️ Configure Git
+      - name: 📝 Create Pull Request for resume.pdf
         if: steps.check_diff.outputs.changed == 'true'
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "marcuschanjh@gmail.com"
-          git remote set-url origin https://${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}
-
-      - name: 📝 Commit and Push resume.pdf
-        if: steps.check_diff.outputs.changed == 'true'
-        run: |
-          git add docs/resume.pdf
-          git commit -m "[GA] Update resume.pdf"
-          git push
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "[GA] Update resume.pdf"
+          title: "[GA] Update resume.pdf"
+          body: |
+            Automated update of resume.pdf from GitHub Actions
+            
+            This PR contains the latest version of the resume PDF generated from LaTeX source files.
+          branch: update-resume-pdf
+          delete-branch: true
+          assignees: ${{ github.actor }}
 
       - name: ✅ Done
         if: steps.check_changes.outputs.should_skip == 'false'
