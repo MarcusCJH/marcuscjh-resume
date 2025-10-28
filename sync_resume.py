@@ -76,6 +76,7 @@ class ResumeSyncer:
             print("No summary found in config")
             return
         
+        escaped_summary = self._escape_latex(summary)
         content = f"""% Professional Summary Section
 % Customize your professional summary as needed
 
@@ -84,7 +85,7 @@ class ResumeSyncer:
         \\begin{{minipage}}{{0.95\\textwidth}}
             \\centering
             \\vspace{{6pt}}
-            \\textcolor{{textgray}}{{\\textit{{{summary}}}}}
+            \\textcolor{{textgray}}{{\\textit{{{escaped_summary}}}}}
             \\vspace{{6pt}}
         \\end{{minipage}}
     }}
@@ -116,8 +117,9 @@ class ResumeSyncer:
             
             # Get location from modalContent
             location = entry.get('modalContent', {}).get('location', '')
+            escaped_location = self._escape_table_content(location)
             
-            content += f"\\resumeSubheading\n{{{company}}}{{{location}}}\n{{{title}}}{{{date_str}}}\n"
+            content += f"\\resumeSubheading\n{{{company}}}{{{escaped_location}}}\n{{{title}}}{{{date_str}}}\n"
         
         content += "\\resumeSubHeadingListEnd"
         self._write_section('education.tex', content)
@@ -127,7 +129,7 @@ class ResumeSyncer:
         timeline = self.data.get('timeline', [])
         cert_entries = [e for e in timeline if e.get('category') == 'certification']
         
-        content = "%-----------CERTIFICATIONS-----------\n\\section{Certifications}\n  \\resumeSubHeadingListStart\n"
+        content = "%-----------CERTIFICATIONS-----------\n\\section{Certifications}\n\\begin{itemize}[leftmargin=0.15in, label={}]\n    \\small{\\item{\n"
         
         for entry in sorted(cert_entries, key=lambda x: x.get('order', 0), reverse=True):
             title = entry.get('title', '')
@@ -137,9 +139,13 @@ class ResumeSyncer:
             # Extract just the year from the date (e.g., "Jul 2024" -> "2024")
             year = start_date.split()[-1] if start_date else ''
             
-            content += f"    \\resumeSubheading\n      {{{title}}}{{{year}}}\n      {{{company}}}{{}}\n"
+            # Escape LaTeX characters
+            escaped_title = self._escape_latex(title)
+            escaped_company = self._escape_latex(company)
+            
+            content += f"        \\textbf{{{escaped_title}}} - {escaped_company} \\hfill {year} \\\\\n"
         
-        content += "  \\resumeSubHeadingListEnd"
+        content += "    }}\n\\end{itemize}"
         self._write_section('certifications.tex', content)
     
     def update_projects(self):
@@ -167,12 +173,113 @@ class ResumeSyncer:
             
             for point in key_points:
                 if point:
-                    content += f"            \\resumeItem{{{point}}}\n"
+                    escaped_point = self._escape_latex(point)
+                    content += f"            \\resumeItem{{{escaped_point}}}\n"
             
             content += f"          \\resumeItemListEnd\n"
         
         content += "    \\resumeSubHeadingListEnd"
         self._write_section('projects.tex', content)
+    
+    def update_experience(self):
+        """Update experience.tex with work timeline"""
+        timeline = self.data.get('timeline', [])
+        work_entries = [e for e in timeline if e.get('category') == 'work']
+        
+        content = "%-----------EXPERIENCE-----------\n\\section{Experience}\n\\resumeSubHeadingListStart\n"
+        
+        for i, entry in enumerate(sorted(work_entries, key=lambda x: x.get('order', 0), reverse=True)):
+            title = entry.get('title', '')
+            company = entry.get('company', '')
+            start_date = entry.get('startDate', '')
+            end_date = entry.get('endDate', '')
+            location = entry.get('modalContent', {}).get('location', '')
+            details = entry.get('modalContent', {}).get('details', [])
+            
+            # Format dates - convert to YYYY format for consistency
+            if start_date and end_date:
+                start_year = start_date.split()[-1] if start_date else ''
+                end_year = end_date.split()[-1] if end_date else ''
+                if end_year == 'Present':
+                    date_str = f"{start_year} -- Present"
+                else:
+                    date_str = f"{start_year} -- {end_year}"
+            elif start_date:
+                year = start_date.split()[-1] if start_date else ''
+                date_str = year
+            else:
+                date_str = ""
+            
+            # Add needspace before each job (except first)
+            if i > 0:
+                if company == "Accenture":
+                    content += "\n\\needspace{4cm}\n"
+                else:
+                    content += "\n\\needspace{3cm}\n"
+            
+            escaped_location = self._escape_table_content(location)
+            content += f"\\resumeSubheading\n{{{title}}}{{{date_str}}}\n{{{company}}}{{{escaped_location}}}\n"
+            
+            if details:
+                content += "\\resumeItemListStart\n"
+                
+                # Process details to match the exact format from experience copy
+                in_itemize = False
+                
+                for detail in details:
+                    detail = detail.strip()
+                    if not detail:
+                        continue
+                    
+                    # Check if this is a role header (contains dates in parentheses)
+                    if "(" in detail and ")" in detail and ("Present" in detail or "20" in detail):
+                        if in_itemize:
+                            content += "\\end{itemize}\n"
+                            in_itemize = False
+                        
+                        # Format role with " - " separator like in the reference
+                        if " - " in detail:
+                            # Split only on the first " - " to preserve the rest
+                            parts = detail.split(" - ", 1)
+                            role_title = self._escape_latex(parts[0].strip())
+                            role_dept = self._escape_latex(parts[1].strip())
+                            formatted_role = f"\\textbf{{{role_title}}} - {role_dept}"
+                        else:
+                            escaped_detail = self._escape_latex(detail)
+                            formatted_role = f"\\textbf{{{escaped_detail}}}"
+                        
+                        content += f"\\resumeItem{{{formatted_role}}}\n"
+                        content += "\\begin{itemize}\n"
+                        in_itemize = True
+                    elif detail.startswith("  •"):
+                        # This is a nested bullet point (indented)
+                        bullet_text = self._escape_latex(detail[3:].strip())
+                        content += f"    \\resumeItem{{{bullet_text}}}\n"
+                    elif detail.startswith("•"):
+                        # This is a bullet point
+                        bullet_text = self._escape_latex(detail[1:].strip())
+                        content += f"    \\resumeItem{{{bullet_text}}}\n"
+                    else:
+                        # Regular item - check if it's a sub-section header
+                        if detail.endswith(" - Singapore") or detail.endswith(" - Yokohama, Japan"):
+                            if in_itemize:
+                                content += "\\end{itemize}\n"
+                                in_itemize = False
+                            escaped_detail = self._escape_latex(detail)
+                            content += f"\\resumeItem{{\\textbf{{{escaped_detail}}}}}\n"
+                            content += "\\begin{itemize}\n"
+                            in_itemize = True
+                        else:
+                            escaped_detail = self._escape_latex(detail)
+                            content += f"\\resumeItem{{{escaped_detail}}}\n"
+                
+                if in_itemize:
+                    content += "\\end{itemize}\n"
+                
+                content += "\\resumeItemListEnd\n"
+        
+        content += "\n\\resumeSubHeadingListEnd"
+        self._write_section('experience.tex', content)
     
     def update_skills(self):
         """Update skills.tex with skills from data.json"""
@@ -211,6 +318,47 @@ class ResumeSyncer:
         
         return True
     
+    def _escape_latex(self, text):
+        """Escape special LaTeX characters"""
+        # Replace % with \% for LaTeX
+        text = text.replace('%', '\\%')
+        # Replace & with \& for LaTeX (but be careful with table contexts)
+        text = text.replace('&', '\\&')
+        # Replace $ with \$ for LaTeX
+        text = text.replace('$', '\\$')
+        # Replace # with \# for LaTeX
+        text = text.replace('#', '\\#')
+        # Replace ^ with \^{} for LaTeX
+        text = text.replace('^', '\\^{}')
+        # Replace _ with \_ for LaTeX
+        text = text.replace('_', '\\_')
+        # Replace { with \{ for LaTeX
+        text = text.replace('{', '\\{')
+        # Replace } with \} for LaTeX
+        text = text.replace('}', '\\}')
+        return text
+    
+    def _escape_table_content(self, text):
+        """Escape LaTeX characters for table content (like resumeSubheading)"""
+        # For table content, we need to be more careful with &
+        # Replace & with \& for LaTeX table contexts
+        text = text.replace('&', '\\&')
+        # Replace % with \% for LaTeX
+        text = text.replace('%', '\\%')
+        # Replace $ with \$ for LaTeX
+        text = text.replace('$', '\\$')
+        # Replace # with \# for LaTeX
+        text = text.replace('#', '\\#')
+        # Replace ^ with \^{} for LaTeX
+        text = text.replace('^', '\\^{}')
+        # Replace _ with \_ for LaTeX
+        text = text.replace('_', '\\_')
+        # Replace { with \{ for LaTeX
+        text = text.replace('{', '\\{')
+        # Replace } with \} for LaTeX
+        text = text.replace('}', '\\}')
+        return text
+    
     def _write_section(self, filename, content):
         """Write content to a section file"""
         filepath = self.sections_dir / filename
@@ -241,6 +389,7 @@ class ResumeSyncer:
         # Update all sections
         self.update_header()
         self.update_summary()
+        self.update_experience()
         self.update_education()
         self.update_certifications()
         self.update_projects()
