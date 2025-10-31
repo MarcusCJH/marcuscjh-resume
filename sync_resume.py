@@ -299,7 +299,7 @@ class ResumeSyncer:
                 tech_list = ', '.join(sorted(technologies))
                 content += f"     \\textbf{{{category_name}}}{{: {tech_list}}} \\\\\n"
         
-        content += "    }}}\n \\end{itemize}"
+        content += "    }}\n \\end{itemize}"
         
         self._write_section('skills.tex', content)
     

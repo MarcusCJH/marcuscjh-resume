@@ -85,8 +85,8 @@ jobs:
           delete-branch: true
           assignees: MarcusCJH
           reviewers: MarcusCJH
-          author: Marcus Chan
-          committer: Marcus Chan
+          author: Marcus Chan <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
+          committer: Marcus Chan <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
 
       - name: ✅ Done
         if: steps.check_changes.outputs.should_skip == 'false'
