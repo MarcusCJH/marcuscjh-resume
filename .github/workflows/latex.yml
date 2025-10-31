@@ -63,20 +63,30 @@ jobs:
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
+      - name: 📅 Generate date string
+        if: steps.check_diff.outputs.changed == 'true'
+        id: date
+        run: |
+          DATE=$(date +%Y%m%d)
+          echo "date=$DATE" >> $GITHUB_OUTPUT
+
       - name: 📝 Create Pull Request for resume.pdf
         if: steps.check_diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "[GA] Update resume.pdf"
-          title: "[GA] Update resume.pdf"
+          commit-message: "[GA] Update resume.pdf - ${{ steps.date.outputs.date }}"
+          title: "[GA] Update resume.pdf - ${{ steps.date.outputs.date }}"
           body: |
             Automated update of resume.pdf from GitHub Actions
             
             This PR contains the latest version of the resume PDF generated from LaTeX source files.
-          branch: update-resume-pdf
+          branch: update-resume-pdf-${{ steps.date.outputs.date }}
           delete-branch: true
-          assignees: ${{ github.actor }}
+          assignees: MarcusCJH
+          reviewers: MarcusCJH
+          author: Marcus Chan
+          committer: Marcus Chan
 
       - name: ✅ Done
         if: steps.check_changes.outputs.should_skip == 'false'
