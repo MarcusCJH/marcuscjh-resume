@@ -2,82 +2,239 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Marcus CJH — Resume</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
     <style>
-        * {
+        :root {
+            color-scheme: light;
+            --bg-gradient: radial-gradient(circle at top left, rgba(45, 127, 249, 0.18), transparent 55%),
+                radial-gradient(circle at bottom right, rgba(25, 91, 205, 0.15), transparent 60%),
+                #f5f7fb;
+            --surface: #ffffff;
+            --text-primary: #1c2333;
+            --text-secondary: #4f5b7d;
+            --accent: #2d7ff9;
+            --accent-hover: #1f66d4;
+            --border-subtle: rgba(28, 35, 51, 0.08);
+            --shadow-lg: 0 24px 48px rgba(26, 47, 96, 0.12);
+            --shadow-sm: 0 12px 24px rgba(26, 47, 96, 0.08);
+            font-size: 16px;
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                font-size: 15px;
+            }
+        }
+
+        *, *::before, *::after {
             box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            font-family: sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        /* Centered layout */
-        #landing {
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--text-primary);
+            background: var(--bg-gradient);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 2em;
         }
 
-        .resume-box {
-            background-color: #fff;
-            padding: 2em 3em;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        a {
+            color: inherit;
+        }
+
+        .page {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem clamp(1.5rem, 3vw, 3.5rem);
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .logo-lockup {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.04em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-secondary);
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            transition: background-color 200ms ease, color 200ms ease;
+        }
+
+        .nav-link:focus-visible,
+        .nav-link:hover {
+            background-color: rgba(45, 127, 249, 0.12);
+            color: var(--accent);
+            outline: none;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+            gap: clamp(2rem, 4vw, 3.5rem);
+            padding: clamp(2rem, 6vw, 4rem) clamp(1.5rem, 3vw, 3.5rem) 3.5rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-card {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: clamp(2rem, 5vw, 3rem);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .hero-heading {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .hero-name {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            letter-spacing: 0.02em;
+            margin: 0;
+        }
+
+        .hero-role {
+            margin: 0;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .summary {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .highlights {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .highlight {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .highlight-emoji {
+            font-size: 1.2rem;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
         }
 
         .btn {
-            margin-top: 1em;
-            margin-right: 1em;
-            padding: 12px 24px;
-            font-size: 16px;
-            background-color: #2d7ff9;
-            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.4rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
             border: none;
-            border-radius: 6px;
             cursor: pointer;
             text-decoration: none;
-            display: inline-block;
+            transition: transform 180ms ease, box-shadow 180ms ease, background-color 200ms ease;
         }
 
-        .btn:hover {
-            background-color: #1a5fcd;
+        .btn-primary {
+            background-color: var(--accent);
+            color: #fff;
+            box-shadow: var(--shadow-sm);
         }
 
-        /* Side-by-side layout */
-        #preview {
-            display: none;
-            height: 100vh;
+        .btn-primary:hover,
+        .btn-primary:focus-visible {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+            outline: none;
         }
 
-        .preview-layout {
-            display: flex;
-            height: 100%;
+        .btn-secondary {
+            background-color: rgba(45, 127, 249, 0.12);
+            color: var(--accent);
         }
 
-        .left {
-            width: 35%;
-            background-color: #ffffff;
-            padding: 3em;
+        .btn-secondary:hover,
+        .btn-secondary:focus-visible {
+            background-color: rgba(45, 127, 249, 0.2);
+            transform: translateY(-1px);
+            outline: none;
+        }
+
+        .preview-card {
+            background: var(--surface);
+            border-radius: 28px;
+            padding: clamp(1.25rem, 3vw, 1.75rem);
+            box-shadow: var(--shadow-lg);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+            gap: 1rem;
+            border: 1px solid var(--border-subtle);
+            min-height: 60vh;
         }
 
-        .right {
-            width: 65%;
-            background-color: #e9ecef;
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .preview-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .preview-frame {
+            position: relative;
+            flex: 1;
+            min-height: clamp(420px, 55vh, 680px);
+            border-radius: 18px;
+            overflow: hidden;
+            background: #f0f3fa;
         }
 
         iframe {
@@ -86,58 +243,167 @@
             border: none;
         }
 
-        @media (max-width: 768px) {
-            .preview-layout {
+        .loader {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(45, 127, 249, 0.12), rgba(45, 127, 249, 0.05));
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            transition: opacity 200ms ease;
+        }
+
+        .loader[hidden] {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .mobile-toggle {
+            display: none;
+        }
+
+        @media (max-width: 960px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-card {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .top-nav {
                 flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
             }
 
-            .left,
-            .right {
-                width: 100%;
-                height: auto;
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 0.5rem;
             }
 
-            iframe {
-                height: 80vh;
+            .preview-card {
+                padding: 1rem;
+            }
+
+            .preview-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .mobile-toggle {
+                display: inline-flex;
+            }
+
+            .preview-frame {
+                min-height: 65vh;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
             }
         }
     </style>
 </head>
 <body>
+<div class="page">
+    <header class="top-nav" role="banner">
+        <div class="logo-lockup" aria-label="Marcus CJH personal brand">Marcus&nbsp;CJH</div>
+        <nav class="nav-links" aria-label="Primary">
+            <a class="nav-link" href="https://marcuscjh.com" target="_blank" rel="noreferrer noopener">Portfolio</a>
+            <a class="nav-link" href="https://github.com/marcuscjh" target="_blank" rel="noreferrer noopener">GitHub</a>
+            <a class="nav-link" href="https://www.linkedin.com/in/marcuscjh" target="_blank" rel="noreferrer noopener">LinkedIn</a>
+        </nav>
+    </header>
 
-<!-- Initial centered landing screen -->
-<div id="landing">
-    <div class="resume-box">
-        <h1>MarcusCJH</h1>
-        <a href="resume.pdf?v=1" download class="btn">📥 Download Resume</a>
-        <button class="btn" onclick="showPreview()">👁️ Preview Resume</button>
-    </div>
-</div>
+    <main class="content" role="main">
+        <section class="hero-card" aria-labelledby="hero-title">
+            <div class="hero-heading">
+                <p class="hero-role">Senior Software Engineer · Technical Leader</p>
+                <h1 id="hero-title" class="hero-name">Marcus CJH</h1>
+            </div>
+            <p class="summary">Engineer and product-minded builder with a track record of shipping resilient cloud-native platforms, growing engineering teams, and leveling up developer experience through automation and thoughtful design.</p>
+            <div class="highlights" aria-label="Career highlights">
+                <div class="highlight">
+                    <span class="highlight-emoji" aria-hidden="true">🚀</span>
+                    <span>Led high-impact launches across fintech and SaaS, driving measurable gains in activation and retention.</span>
+                </div>
+                <div class="highlight">
+                    <span class="highlight-emoji" aria-hidden="true">🧭</span>
+                    <span>Guides teams through strategic roadmaps, modernizing architectures while keeping shipping velocity high.</span>
+                </div>
+                <div class="highlight">
+                    <span class="highlight-emoji" aria-hidden="true">🤝</span>
+                    <span>Collaborative mentor focused on inclusive culture, career growth, and clear communication with stakeholders.</span>
+                </div>
+            </div>
+            <div class="actions">
+                <a class="btn btn-primary" href="resume.pdf" download aria-label="Download Marcus CJH resume as PDF">📥 Download PDF</a>
+                <a class="btn btn-secondary" href="mailto:hello@marcuscjh.com" aria-label="Email Marcus CJH">✉️ Email Marcus</a>
+                <button class="btn btn-secondary mobile-toggle" type="button" data-action="toggle-preview" aria-expanded="true" aria-controls="resume-preview">👁️ Toggle preview</button>
+            </div>
+        </section>
 
-<!-- Side-by-side preview layout -->
-<div id="preview">
-    <div class="preview-layout">
-        <div class="left">
-            <h1>Marcus CJH</h1>
-            <a href="resume.pdf?v=1" download class="btn">📥 Download PDF</a>
-            <button class="btn" onclick="hidePreview()">❌ Close Preview</button>
-        </div>
-        <div class="right">
-            <iframe src="resume.pdf?v=1" title="Marcus CJH Resume PDF Preview"></iframe>
-        </div>
-    </div>
+        <section class="preview-card" aria-labelledby="preview-title" id="resume-preview">
+            <div class="preview-header">
+                <h2 class="preview-title" id="preview-title">Resume preview</h2>
+                <a class="btn btn-secondary" href="resume.pdf" target="_blank" rel="noreferrer noopener" aria-label="Open Marcus CJH resume in a new tab">↗️ Open in new tab</a>
+            </div>
+            <div class="preview-frame">
+                <div class="loader" role="status" aria-live="polite" id="preview-loader">Loading resume…</div>
+                <iframe src="resume.pdf" title="Embedded Marcus CJH resume PDF" aria-label="Embedded Marcus CJH resume PDF" loading="lazy"></iframe>
+            </div>
+        </section>
+    </main>
 </div>
 
 <script>
-    function showPreview() {
-        document.getElementById('landing').style.display = 'none';
-        document.getElementById('preview').style.display = 'block';
+    const previewFrame = document.querySelector('.preview-frame iframe');
+    const loader = document.getElementById('preview-loader');
+    const mobileToggle = document.querySelector('[data-action="toggle-preview"]');
+    const previewCard = document.getElementById('resume-preview');
+
+    if (previewFrame) {
+        previewFrame.addEventListener('load', () => {
+            loader?.setAttribute('hidden', '');
+        });
     }
 
-    function hidePreview() {
-        document.getElementById('preview').style.display = 'none';
-        document.getElementById('landing').style.display = 'flex';
+    if (mobileToggle && previewCard) {
+        mobileToggle.addEventListener('click', () => {
+            const isHidden = previewCard.hasAttribute('hidden');
+            if (isHidden) {
+                previewCard.removeAttribute('hidden');
+            } else {
+                previewCard.setAttribute('hidden', '');
+            }
+            mobileToggle.setAttribute('aria-expanded', String(isHidden));
+        });
     }
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Marcus CJH",
+  "jobTitle": "Senior Software Engineer",
+  "url": "https://marcuscjh.com",
+  "email": "hello@marcuscjh.com",
+  "sameAs": [
+    "https://github.com/marcuscjh",
+    "https://www.linkedin.com/in/marcuscjh"
+  ],
+  "description": "Engineer and product-minded builder focused on resilient cloud platforms and high-velocity teams."
+}
 </script>
 
 </body>
