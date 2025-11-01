@@ -2,9 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Marcus CJH — Resume</title>
     <style>
         * {
@@ -13,132 +11,75 @@
 
         body {
             margin: 0;
-            font-family: sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        /* Centered layout */
-        #landing {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f3f4f6;
+            color: #111827;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
             min-height: 100vh;
+        }
+
+        header {
+            padding: 2rem 1.5rem 1rem;
             text-align: center;
-            padding: 2em;
         }
 
-        .resume-box {
-            background-color: #fff;
-            padding: 2em 3em;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        h1 {
+            margin: 0 0 0.5rem;
+            font-size: clamp(2rem, 5vw, 2.5rem);
         }
 
-        .btn {
-            margin-top: 1em;
-            margin-right: 1em;
-            padding: 12px 24px;
-            font-size: 16px;
-            background-color: #2d7ff9;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn:hover {
-            background-color: #1a5fcd;
-        }
-
-        /* Side-by-side layout */
-        #preview {
-            display: none;
-            height: 100vh;
-        }
-
-        .preview-layout {
+        .resume-actions {
             display: flex;
-            height: 100%;
-        }
-
-        .left {
-            width: 35%;
-            background-color: #ffffff;
-            padding: 3em;
-            display: flex;
-            flex-direction: column;
             justify-content: center;
-            align-items: center;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+            flex-wrap: wrap;
+            gap: 0.75rem;
         }
 
-        .right {
-            width: 65%;
-            background-color: #e9ecef;
+        .resume-actions a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            background: #2563eb;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .resume-preview {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 1rem 1.5rem 2rem;
         }
 
         iframe {
-            width: 100%;
-            height: 100%;
+            width: min(960px, 100%);
+            height: 85vh;
             border: none;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+            background: #ffffff;
         }
 
-        @media (max-width: 768px) {
-            .preview-layout {
-                flex-direction: column;
-            }
-
-            .left,
-            .right {
-                width: 100%;
-                height: auto;
-            }
-
+        @media (max-width: 640px) {
             iframe {
-                height: 80vh;
+                height: 75vh;
             }
         }
     </style>
 </head>
 <body>
-
-<!-- Initial centered landing screen -->
-<div id="landing">
-    <div class="resume-box">
-        <h1>MarcusCJH</h1>
-        <a href="resume.pdf?v=1" download class="btn">📥 Download Resume</a>
-        <button class="btn" onclick="showPreview()">👁️ Preview Resume</button>
-    </div>
-</div>
-
-<!-- Side-by-side preview layout -->
-<div id="preview">
-    <div class="preview-layout">
-        <div class="left">
-            <h1>Marcus CJH</h1>
-            <a href="resume.pdf?v=1" download class="btn">📥 Download PDF</a>
-            <button class="btn" onclick="hidePreview()">❌ Close Preview</button>
+    <header>
+        <h1>Marcus CJH</h1>
+        <div class="resume-actions">
+            <a href="resume.pdf" download>📥 Download Resume</a>
         </div>
-        <div class="right">
-            <iframe src="resume.pdf?v=1" title="Marcus CJH Resume PDF Preview"></iframe>
-        </div>
-    </div>
-</div>
-
-<script>
-    function showPreview() {
-        document.getElementById('landing').style.display = 'none';
-        document.getElementById('preview').style.display = 'block';
-    }
-
-    function hidePreview() {
-        document.getElementById('preview').style.display = 'none';
-        document.getElementById('landing').style.display = 'flex';
-    }
-</script>
-
+    </header>
+    <main class="resume-preview">
+        <iframe src="resume.pdf" title="Marcus CJH Resume"></iframe>
+    </main>
 </body>
 </html>
