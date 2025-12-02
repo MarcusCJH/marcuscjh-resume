@@ -2,142 +2,330 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Marcus CJH — Resume</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --bg-card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.08);
         }
 
         body {
-            margin: 0;
-            font-family: sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
         }
 
-        /* Centered layout */
-        #landing {
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 0.875rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 2em;
+            gap: 1rem;
         }
 
-        .resume-box {
-            background-color: #fff;
-            padding: 2em 3em;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .header h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .btn {
-            margin-top: 1em;
-            margin-right: 1em;
-            padding: 12px 24px;
-            font-size: 16px;
-            background-color: #2d7ff9;
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1rem;
+            background: var(--primary);
             color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
             text-decoration: none;
-            display: inline-block;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        .btn:hover {
-            background-color: #1a5fcd;
+        .btn-download:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
-        /* Side-by-side layout */
-        #preview {
-            display: none;
-            height: 100vh;
+        .btn-download:active {
+            transform: translateY(0);
         }
 
-        .preview-layout {
-            display: flex;
-            height: 100%;
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
         }
 
-        .left {
-            width: 35%;
-            background-color: #ffffff;
-            padding: 3em;
+        #pdf-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .right {
-            width: 65%;
-            background-color: #e9ecef;
-        }
-
-        iframe {
+            min-height: 400px;
             width: 100%;
-            height: 100%;
-            border: none;
+            overflow-x: hidden;
         }
 
+        .pdf-page {
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 4px var(--shadow);
+            border-radius: 4px;
+            overflow: hidden;
+            background: white;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .pdf-page:last-child {
+            margin-bottom: 0;
+        }
+
+        .pdf-page canvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            width: 100%;
+        }
+
+        .pdf-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .preview-layout {
-                flex-direction: column;
+            .header {
+                padding: 0.75rem 1rem;
             }
 
-            .left,
-            .right {
-                width: 100%;
-                height: auto;
+            .header h1 {
+                font-size: 1.125rem;
             }
 
-            iframe {
-                height: 80vh;
+            .btn-download {
+                padding: 0.5rem 0.875rem;
+                font-size: 0.8125rem;
+            }
+
+            .btn-download span:last-child {
+                display: none;
+            }
+
+            .btn-download::after {
+                content: 'PDF';
+                margin-left: 0.25rem;
+            }
+
+            .container {
+                padding: 0.75rem;
+            }
+
+            #pdf-container {
+                padding: 0.75rem;
+                border-radius: 8px;
+            }
+
+            .pdf-page {
+                margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1rem;
+            }
+
+            .btn-download {
+                padding: 0.5rem;
+                min-width: 44px;
+            }
+
+            .btn-download::after {
+                content: '';
+            }
+
+            .container {
+                padding: 0.5rem;
+            }
+
+            #pdf-container {
+                padding: 0.5rem;
+                border-radius: 6px;
             }
         }
     </style>
 </head>
 <body>
 
-<!-- Initial centered landing screen -->
-<div id="landing">
-    <div class="resume-box">
-        <h1>MarcusCJH</h1>
-        <a href="resume.pdf?v=1" download class="btn">📥 Download Resume</a>
-        <button class="btn" onclick="showPreview()">👁️ Preview Resume</button>
+<!-- Header -->
+<header class="header">
+    <div class="header-content">
+        <h1>Marcus CJH</h1>
+        <a href="resume.pdf" download class="btn-download">
+            <span>📥</span>
+            <span>Download PDF</span>
+        </a>
     </div>
-</div>
+</header>
 
-<!-- Side-by-side preview layout -->
-<div id="preview">
-    <div class="preview-layout">
-        <div class="left">
-            <h1>Marcus CJH</h1>
-            <a href="resume.pdf?v=1" download class="btn">📥 Download PDF</a>
-            <button class="btn" onclick="hidePreview()">❌ Close Preview</button>
-        </div>
-        <div class="right">
-            <iframe src="resume.pdf?v=1" title="Marcus CJH Resume PDF Preview"></iframe>
+<!-- Main Content -->
+<main class="container">
+    <div id="pdf-container">
+        <div class="pdf-loading">
+            <div class="spinner"></div>
+            <div>Loading resume...</div>
         </div>
     </div>
-</div>
+</main>
 
 <script>
-    function showPreview() {
-        document.getElementById('landing').style.display = 'none';
-        document.getElementById('preview').style.display = 'block';
+    // Configure PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    let pdfDoc = null;
+    
+    // Responsive scale based on screen width
+    function getScale() {
+        const width = window.innerWidth;
+        if (width <= 480) return 1.0;
+        if (width <= 768) return 1.5;
+        return 2.0;
     }
 
-    function hidePreview() {
-        document.getElementById('preview').style.display = 'none';
-        document.getElementById('landing').style.display = 'flex';
+    function renderPage(pageNum) {
+        return pdfDoc.getPage(pageNum).then(function(page) {
+            const scale = getScale();
+            const viewport = page.getViewport({scale: scale});
+            
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const pageDiv = document.createElement('div');
+            pageDiv.className = 'pdf-page';
+            
+            // Ensure canvas fits within container
+            const maxWidth = Math.min(viewport.width, window.innerWidth - 32);
+            canvas.style.maxWidth = '100%';
+            canvas.style.width = '100%';
+            canvas.style.height = 'auto';
+            
+            pageDiv.appendChild(canvas);
+
+            const renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+
+            return page.render(renderContext).promise.then(function() {
+                // Adjust canvas display size for mobile
+                const containerWidth = window.innerWidth - 32;
+                if (viewport.width > containerWidth) {
+                    const ratio = containerWidth / viewport.width;
+                    canvas.style.width = containerWidth + 'px';
+                    canvas.style.height = (viewport.height * ratio) + 'px';
+                }
+                return pageDiv;
+            });
+        });
     }
+
+    function loadPDF() {
+        const container = document.getElementById('pdf-container');
+        const loadingDiv = container.querySelector('.pdf-loading');
+        
+        const loadingTask = pdfjsLib.getDocument('resume.pdf?v=' + Date.now());
+        loadingTask.promise.then(function(pdf) {
+            pdfDoc = pdf;
+            const numPages = pdf.numPages;
+            
+            loadingDiv.style.display = 'none';
+            
+            const renderPromises = [];
+            for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                renderPromises.push(renderPage(pageNum));
+            }
+            
+            Promise.all(renderPromises).then(function(pageDivs) {
+                pageDivs.forEach(function(pageDiv) {
+                    container.appendChild(pageDiv);
+                });
+            });
+        }, function(error) {
+            console.error('Error loading PDF:', error);
+            loadingDiv.innerHTML = '<div style="color: #ef4444; text-align: center;">Error loading PDF. Please refresh the page.</div>';
+        });
+    }
+
+    // Load PDF immediately on page load
+    loadPDF();
 </script>
 
 </body>
