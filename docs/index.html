@@ -247,103 +247,165 @@
 </main>
 
 <script>
-    // Configure PDF.js worker
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-    let pdfDoc = null;
-    
-    // Get device pixel ratio for high DPI displays
-    const devicePixelRatio = window.devicePixelRatio || 1;
-    
-    // Responsive scale based on screen width - higher quality
-    function getScale() {
-        const width = window.innerWidth;
-        let baseScale;
-        if (width <= 480) {
-            baseScale = 1.5;
-        } else if (width <= 768) {
-            baseScale = 2.0;
-        } else {
-            baseScale = 2.5;
+    function initPDF() {
+        // Check if PDF.js is loaded
+        if (typeof pdfjsLib === 'undefined') {
+            console.error('PDF.js not loaded');
+            const loadingDiv = document.querySelector('.pdf-loading');
+            loadingDiv.innerHTML = '<div style="color: #ef4444; text-align: center; padding: 2rem;">PDF.js library failed to load. Please refresh the page.</div>';
+            return;
         }
-        // Multiply by device pixel ratio for retina displays
-        return baseScale * devicePixelRatio;
-    }
-
-    function renderPage(pageNum) {
-        return pdfDoc.getPage(pageNum).then(function(page) {
-            const scale = getScale();
-            const viewport = page.getViewport({scale: scale});
-            
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Set actual canvas size for high DPI
-            const outputScale = devicePixelRatio;
-            canvas.width = Math.floor(viewport.width * outputScale);
-            canvas.height = Math.floor(viewport.height * outputScale);
-            
-            // Scale the canvas context for high DPI
-            ctx.scale(outputScale, outputScale);
-            
-            // Set CSS size for display
-            canvas.style.width = viewport.width + 'px';
-            canvas.style.height = viewport.height + 'px';
-
-            const pageDiv = document.createElement('div');
-            pageDiv.className = 'pdf-page';
-            pageDiv.appendChild(canvas);
-
-            const renderContext = {
-                canvasContext: ctx,
-                viewport: viewport,
-                // Enable text rendering improvements
-                enableWebGL: false,
-                renderInteractiveForms: false
-            };
-
-            return page.render(renderContext).promise.then(function() {
-                // Adjust canvas display size for mobile while maintaining quality
-                const containerWidth = window.innerWidth - 64;
-                if (viewport.width > containerWidth) {
-                    const ratio = containerWidth / viewport.width;
-                    canvas.style.width = containerWidth + 'px';
-                    canvas.style.height = (viewport.height * ratio) + 'px';
-                }
-                return pageDiv;
-            });
-        });
-    }
-
-    function loadPDF() {
-        const container = document.getElementById('pdf-container');
-        const loadingDiv = container.querySelector('.pdf-loading');
         
-        const loadingTask = pdfjsLib.getDocument('resume.pdf?v=' + Date.now());
-        loadingTask.promise.then(function(pdf) {
-            pdfDoc = pdf;
-            const numPages = pdf.numPages;
-            
-            loadingDiv.style.display = 'none';
-            
-            const renderPromises = [];
-            for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-                renderPromises.push(renderPage(pageNum));
+        // Configure PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        let pdfDoc = null;
+        
+        // Get device pixel ratio for high DPI displays
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        
+        // Responsive scale based on screen width - optimized for mobile
+        function getScale() {
+            const width = window.innerWidth;
+            let baseScale;
+            if (width <= 480) {
+                baseScale = 1.2; // Reduced for mobile performance
+            } else if (width <= 768) {
+                baseScale = 1.8;
+            } else {
+                baseScale = 2.5;
             }
-            
-            Promise.all(renderPromises).then(function(pageDivs) {
-                pageDivs.forEach(function(pageDiv) {
-                    container.appendChild(pageDiv);
+            // Limit device pixel ratio multiplier for mobile to avoid memory issues
+            const dpr = width <= 768 ? Math.min(devicePixelRatio, 2) : devicePixelRatio;
+            return baseScale * dpr;
+        }
+
+        function renderPage(pageNum) {
+            return pdfDoc.getPage(pageNum).then(function(page) {
+                const scale = getScale();
+                const viewport = page.getViewport({scale: scale});
+                
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set actual canvas size for high DPI (limited on mobile)
+                const outputScale = window.innerWidth <= 768 ? Math.min(devicePixelRatio, 2) : devicePixelRatio;
+                canvas.width = Math.floor(viewport.width * outputScale);
+                canvas.height = Math.floor(viewport.height * outputScale);
+                
+                // Scale the canvas context for high DPI
+                ctx.scale(outputScale, outputScale);
+                
+                // Set CSS size for display
+                canvas.style.width = viewport.width + 'px';
+                canvas.style.height = viewport.height + 'px';
+
+                const pageDiv = document.createElement('div');
+                pageDiv.className = 'pdf-page';
+                pageDiv.appendChild(canvas);
+
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+
+                return page.render(renderContext).promise.then(function() {
+                    // Adjust canvas display size for mobile while maintaining quality
+                    const containerWidth = window.innerWidth - 64;
+                    if (viewport.width > containerWidth) {
+                        const ratio = containerWidth / viewport.width;
+                        canvas.style.width = containerWidth + 'px';
+                        canvas.style.height = (viewport.height * ratio) + 'px';
+                    }
+                    return pageDiv;
                 });
             });
-        }, function(error) {
-            console.error('Error loading PDF:', error);
-            loadingDiv.innerHTML = '<div style="color: #ef4444; text-align: center;">Error loading PDF. Please refresh the page.</div>';
-        });
-    }
+        }
 
-    // Load PDF immediately on page load
-    loadPDF();
+        function loadPDF() {
+            const container = document.getElementById('pdf-container');
+            const loadingDiv = container.querySelector('.pdf-loading');
+            
+            // Add timeout for mobile
+            const timeout = setTimeout(function() {
+                loadingDiv.innerHTML = '<div style="color: #ef4444; text-align: center; padding: 2rem;">PDF is taking too long to load. <br><br><a href="resume.pdf" download style="color: var(--primary); text-decoration: underline;">Download it here</a> instead.</div>';
+            }, 15000); // 15 second timeout
+            
+            const loadingTask = pdfjsLib.getDocument('resume.pdf?v=' + Date.now());
+            loadingTask.promise.then(function(pdf) {
+                clearTimeout(timeout);
+                pdfDoc = pdf;
+                const numPages = pdf.numPages;
+                
+                loadingDiv.style.display = 'none';
+                
+                const renderPromises = [];
+                for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                    renderPromises.push(renderPage(pageNum));
+                }
+                
+                Promise.all(renderPromises).then(function(pageDivs) {
+                    pageDivs.forEach(function(pageDiv) {
+                        container.appendChild(pageDiv);
+                    });
+                }).catch(function(err) {
+                    console.error('Error rendering pages:', err);
+                    loadingDiv.innerHTML = '<div style="color: #ef4444; text-align: center; padding: 2rem;">Error rendering PDF. <br><br><a href="resume.pdf" download style="color: var(--primary); text-decoration: underline;">Download it here</a> instead.</div>';
+                });
+            }, function(error) {
+                clearTimeout(timeout);
+                console.error('Error loading PDF:', error);
+                let errorMsg = 'Unknown error';
+                if (error.message) {
+                    errorMsg = error.message;
+                } else if (error.name === 'MissingPDFException') {
+                    errorMsg = 'PDF file not found';
+                }
+                loadingDiv.innerHTML = '<div style="color: #ef4444; text-align: center; padding: 2rem;">Error loading PDF: ' + errorMsg + '<br><br><a href="resume.pdf" download style="color: var(--primary); text-decoration: underline;">Download it here</a> instead.</div>';
+            });
+        }
+
+        // Load PDF
+        loadPDF();
+    }
+    
+    // Wait for everything to be ready
+    function start() {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                // Wait for PDF.js to load
+                if (typeof pdfjsLib !== 'undefined') {
+                    initPDF();
+                } else {
+                    // Retry after a delay
+                    setTimeout(function() {
+                        if (typeof pdfjsLib !== 'undefined') {
+                            initPDF();
+                        } else {
+                            const loadingDiv = document.querySelector('.pdf-loading');
+                            loadingDiv.innerHTML = '<div style="color: #ef4444; text-align: center; padding: 2rem;">PDF.js library failed to load. Please check your internet connection and refresh.</div>';
+                        }
+                    }, 2000);
+                }
+            });
+        } else {
+            // DOM already loaded
+            if (typeof pdfjsLib !== 'undefined') {
+                initPDF();
+            } else {
+                setTimeout(function() {
+                    if (typeof pdfjsLib !== 'undefined') {
+                        initPDF();
+                    } else {
+                        const loadingDiv = document.querySelector('.pdf-loading');
+                        loadingDiv.innerHTML = '<div style="color: #ef4444; text-align: center; padding: 2rem;">PDF.js library failed to load. Please check your internet connection and refresh.</div>';
+                    }
+                }, 2000);
+            }
+        }
+    }
+    
+    start();
 </script>
 
 </body>
