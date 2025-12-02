@@ -133,6 +133,8 @@
             max-width: 100%;
             height: auto;
             width: 100%;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
 
         .pdf-loading {
@@ -250,12 +252,22 @@
 
     let pdfDoc = null;
     
-    // Responsive scale based on screen width
+    // Get device pixel ratio for high DPI displays
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    
+    // Responsive scale based on screen width - higher quality
     function getScale() {
         const width = window.innerWidth;
-        if (width <= 480) return 1.0;
-        if (width <= 768) return 1.5;
-        return 2.0;
+        let baseScale;
+        if (width <= 480) {
+            baseScale = 1.5;
+        } else if (width <= 768) {
+            baseScale = 2.0;
+        } else {
+            baseScale = 2.5;
+        }
+        // Multiply by device pixel ratio for retina displays
+        return baseScale * devicePixelRatio;
     }
 
     function renderPage(pageNum) {
@@ -265,28 +277,34 @@
             
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
+            
+            // Set actual canvas size for high DPI
+            const outputScale = devicePixelRatio;
+            canvas.width = Math.floor(viewport.width * outputScale);
+            canvas.height = Math.floor(viewport.height * outputScale);
+            
+            // Scale the canvas context for high DPI
+            ctx.scale(outputScale, outputScale);
+            
+            // Set CSS size for display
+            canvas.style.width = viewport.width + 'px';
+            canvas.style.height = viewport.height + 'px';
 
             const pageDiv = document.createElement('div');
             pageDiv.className = 'pdf-page';
-            
-            // Ensure canvas fits within container
-            const maxWidth = Math.min(viewport.width, window.innerWidth - 32);
-            canvas.style.maxWidth = '100%';
-            canvas.style.width = '100%';
-            canvas.style.height = 'auto';
-            
             pageDiv.appendChild(canvas);
 
             const renderContext = {
                 canvasContext: ctx,
-                viewport: viewport
+                viewport: viewport,
+                // Enable text rendering improvements
+                enableWebGL: false,
+                renderInteractiveForms: false
             };
 
             return page.render(renderContext).promise.then(function() {
-                // Adjust canvas display size for mobile
-                const containerWidth = window.innerWidth - 32;
+                // Adjust canvas display size for mobile while maintaining quality
+                const containerWidth = window.innerWidth - 64;
                 if (viewport.width > containerWidth) {
                     const ratio = containerWidth / viewport.width;
                     canvas.style.width = containerWidth + 'px';
