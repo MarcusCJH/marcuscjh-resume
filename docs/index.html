@@ -14,18 +14,34 @@
             margin:0;
             padding:0;
         }
+        body {
+            height: 100vh;
+            overflow: hidden;
+        }
     </style>
-
     <script type="text/javascript">
-        function getUrlPath()
-        {
+        function getUrlPath() {
             return "resume.pdf?" + new Date().getTime();
         }
     </script>
 </head>
 <body>
-    <div style="height: 100vh;">
-        <iframe src="" width="100%" height="100%" id="resume" onload="this.onload=null; this.src=getUrlPath();">
-    </div>
+    <iframe id="theFrame" src="" style="height:100vh; width:100%;" onload="this.onload=null; this.src=getUrlPath();"></iframe>
+    <script>
+        document.getElementById("theFrame").onload = function() {
+            try {
+                var iframeDoc = this.contentDocument || this.contentWindow.document;
+                var images = iframeDoc.getElementsByTagName("img");
+                if (images.length > 0) {
+                    for (var i = 0; i < images.length; i++) {
+                        images[i].style.width = "100%";
+                    }
+                }
+            } catch (e) {
+                // Cross-origin restrictions may prevent access
+                console.log("Cannot access iframe content:", e);
+            }
+        };
+    </script>
 </body>
 </html>
