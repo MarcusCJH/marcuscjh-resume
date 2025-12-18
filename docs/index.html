@@ -2,46 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv='cache-control' content="no-cache, no-store, must-revalidate"> 
     <meta http-equiv='expires' content='0'> 
     <meta http-equiv='pragma' content='no-cache'>
     <title>Resume - Marcus CJH</title>
     <style>
-        *{
-            border:0;
-            margin:0;
-            padding:0;
-        }
-        body {
-            height: 100vh;
-            overflow: hidden;
-        }
+        * { margin: 0; padding: 0; border: 0; }
+        body, iframe { width: 100%; height: 100vh; }
     </style>
-    <script type="text/javascript">
-        function getUrlPath() {
-            return "resume.pdf?" + new Date().getTime();
-        }
-    </script>
 </head>
 <body>
-    <iframe id="theFrame" src="" style="height:100vh; width:100%;" onload="this.onload=null; this.src=getUrlPath();"></iframe>
+    <iframe src=""></iframe>
     <script>
-        document.getElementById("theFrame").onload = function() {
-            try {
-                var iframeDoc = this.contentDocument || this.contentWindow.document;
-                var images = iframeDoc.getElementsByTagName("img");
-                if (images.length > 0) {
-                    for (var i = 0; i < images.length; i++) {
-                        images[i].style.width = "100%";
-                    }
-                }
-            } catch (e) {
-                // Cross-origin restrictions may prevent access
-                console.log("Cannot access iframe content:", e);
-            }
-        };
+        var pdf = new URL("resume.pdf", location.href).href + "?t=" + Date.now();
+        var iframe = document.querySelector("iframe");
+        iframe.src = location.protocol === "file:" ? pdf : 
+            "https://mozilla.github.io/pdf.js/web/viewer.html?file=" + encodeURIComponent(pdf);
     </script>
 </body>
 </html>
