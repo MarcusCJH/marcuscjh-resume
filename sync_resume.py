@@ -295,7 +295,9 @@ class ResumeSyncer:
         # Add each skill category
         for category, technologies in skills.items():
             if technologies:  # Only add if technologies exist
-                category_name = category.replace('_', ' \\& ').title()
+                # Replace underscores with &, then title case, then escape LaTeX special characters
+                category_name = category.replace('_', ' & ').title()
+                category_name = self._escape_latex(category_name)
                 # Escape each technology for LaTeX before joining
                 escaped_techs = [self._escape_latex(tech) for tech in sorted(technologies)]
                 tech_list = ', '.join(escaped_techs)
