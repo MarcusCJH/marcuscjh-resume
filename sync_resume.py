@@ -50,7 +50,7 @@ class ResumeSyncer:
             print("Missing required fields in config: name or email")
             return
         
-        # Build contact links - only email and portfolio website
+        # Build contact links - email, portfolio website, and LinkedIn
         contact_links = [f"\\href{{mailto:{email}}}{{\\underline{{{email}}}}}"]
         
         # Add portfolio website if available
@@ -58,6 +58,15 @@ class ResumeSyncer:
         if portfolio_url:
             display_name = portfolio_url.replace('https://', '').replace('http://', '')
             contact_links.append(f"\\href{{{portfolio_url}}}{{\\underline{{{display_name}}}}}")
+        
+        # Add LinkedIn if available
+        linkedin_entry = next((s for s in social if s.get('platform', '').lower() == 'linkedin'), None)
+        if linkedin_entry:
+            linkedin_url = linkedin_entry.get('url', '')
+            if linkedin_url:
+                # Extract display name from LinkedIn URL (e.g., "linkedin.com/in/marcuschanjh")
+                display_name = linkedin_url.replace('https://', '').replace('http://', '').replace('www.', '')
+                contact_links.append(f"\\href{{{linkedin_url}}}{{\\underline{{{display_name}}}}}")
         
         content = f"""%----------HEADING----------
 \\begin{{center}}
