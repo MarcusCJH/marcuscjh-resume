@@ -12,6 +12,11 @@ jobs:
   build-and-deploy:
     name: 🛠️ Build & Deploy Resume
     runs-on: ubuntu-latest
+    # Skip if triggered by GitHub Actions bot (prevents loop)
+    if: |
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/master' && github.actor != 'github-actions[bot]')
     permissions:
       contents: write
       pull-requests: write
@@ -41,36 +46,34 @@ jobs:
             # Check what changed in the push
             CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '\.tex$|\.sty$|sections/|styles/' || true)
           else
-            # Check if sync updated sections
-            CHANGED=$(git diff --name-only src/sections/ | grep -E '\.tex$' || true)
+            # Check if sync updated sections (compare against HEAD)
+            CHANGED=$(git diff HEAD --name-only src/sections/ | grep -E '\.tex$' || true)
           fi
           
           if [ -z "$CHANGED" ]; then
             echo "No changes detected"
             echo "has_changes=false" >> $GITHUB_OUTPUT
+            exit 0
           else
             echo "Changes detected: $CHANGED"
             echo "has_changes=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: ⛔ Exit if no changes
-        if: steps.check.outputs.has_changes == 'false'
-        run: |
-          echo "✅ No changes detected. Exiting."
-          exit 0
-
       - name: 🧱 Build PDF
+        if: steps.check.outputs.has_changes == 'true'
         uses: xu-cheng/latex-action@v3
         with:
           root_file: resume.tex
           working_directory: src
 
       - name: 📁 Move PDF
+        if: steps.check.outputs.has_changes == 'true'
         run: |
           mkdir -p docs
           mv src/resume.pdf docs/resume.pdf
 
       - name: 📦 Stage changes
+        if: steps.check.outputs.has_changes == 'true'
         run: |
           if [ "${{ github.event_name }}" != "push" ]; then
             git add src/sections/
@@ -79,16 +82,18 @@ jobs:
           git status --short
 
       - name: 📅 Generate date
+        if: steps.check.outputs.has_changes == 'true'
         id: date
         run: |
           echo "date=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
 
       - name: 📝 Create Pull Request
+        if: steps.check.outputs.has_changes == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: |
-            [GA] Update resume - ${{ steps.date.outputs.date }}
+            [GA] Update resume - ${{ steps.date.outputs.date }} [skip ci]
             
             - Sections synced from data.json
             - PDF rebuilt
