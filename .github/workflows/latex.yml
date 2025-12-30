@@ -34,13 +34,15 @@ jobs:
       - name: 🧠 Check for changes
         id: check
         run: |
-          # Check for .tex changes (from sync or push)
+          # Check for .tex changes after sync
+          SYNC_CHANGED=$(git diff HEAD --name-only src/sections/ | grep -E '\.tex$' || true)
+          
+          # For push events, also check what was pushed
           if [ "${{ github.event_name }}" == "push" ]; then
             PUSH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '\.tex$|sections/' || true)
-            SYNC_CHANGED=$(git diff HEAD --name-only src/sections/ | grep -E '\.tex$' || true)
             CHANGED=$(echo -e "$PUSH_CHANGED\n$SYNC_CHANGED" | grep -v '^$' | sort -u)
           else
-            CHANGED=$(git diff HEAD --name-only src/sections/ | grep -E '\.tex$' || true)
+            CHANGED="$SYNC_CHANGED"
           fi
           
           if [ -z "$CHANGED" ]; then
@@ -49,7 +51,7 @@ jobs:
             exit 0
           fi
           
-          echo "Changes: $CHANGED"
+          echo "Changes detected: $CHANGED"
           echo "has_changes=true" >> $GITHUB_OUTPUT
 
       - name: 🧱 Build PDF
@@ -64,7 +66,26 @@ jobs:
         run: |
           mkdir -p docs
           mv src/resume.pdf docs/resume.pdf
-          git add src/sections/ docs/resume.pdf
+          
+          # Show what changed before staging
+          echo "=== Modified files (before staging) ==="
+          git status --short
+          
+          # Stage all changes in sections directory (including new and modified files)
+          echo "Staging all .tex files in src/sections/..."
+          git add -A src/sections/
+          
+          # Stage PDF
+          echo "Staging PDF..."
+          git add docs/resume.pdf
+          
+          # Verify what's staged
+          echo "=== Staged files (will be in PR) ==="
+          git diff --cached --name-only
+          
+          # Double check with status
+          echo "=== Git status ==="
+          git status --short
 
       - name: 📅 Generate date
         if: steps.check.outputs.has_changes == 'true'
