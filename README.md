@@ -11,7 +11,8 @@ A data-driven, modular LaTeX resume that syncs with portfolio data and builds au
 - **Data-Driven**: Single source of truth from portfolio data.json
 - **Auto-Sync**: Python script updates all LaTeX sections automatically
 - **Modular Design**: Clean separation of content and formatting
-- **Automated Builds**: GitHub Actions CI/CD pipeline
+- **Automated Workflow**: GitHub Actions syncs data, builds PDF, and creates PRs automatically
+- **Scheduled Updates**: Checks for data.json updates every 6 hours
 - **Live Preview**: GitHub Pages with instant download
 
 ## 🚀 Quick Start
@@ -54,7 +55,15 @@ xelatex -output-directory=out -aux-directory=auxil src/resume.tex
 
 ## 📝 How It Works
 
-### Data Flow
+### Automated Workflow
+The GitHub Actions workflow automatically:
+1. **Syncs** data.json from portfolio (every 6 hours or on push/manual trigger)
+2. **Detects** changes in .tex files (from sync or manual edits)
+3. **Builds** PDF if changes are detected
+4. **Creates PR** with updated .tex files and PDF
+5. **Exits early** if no changes detected (saves resources)
+
+### Manual Workflow
 1. **Source**: Portfolio data.json (local or remote)
 2. **Sync**: Python script extracts data and generates LaTeX sections
 3. **Build**: LaTeX compiles sections into final PDF
@@ -89,17 +98,28 @@ xelatex -output-directory=out -aux-directory=auxil src/resume.tex
 
 ## 🔧 Usage
 
-### Update Resume
+### Automated Updates (Recommended)
+The workflow runs automatically:
+- **Every 6 hours**: Checks for data.json updates from portfolio
+- **On push to master**: Syncs and builds if .tex files changed
+- **Manual trigger**: Use "Run workflow" in GitHub Actions tab
+
+When changes are detected, a PR is automatically created with:
+- Updated .tex section files
+- Rebuilt PDF
+
+### Manual Update
 ```bash
-# Sync latest data and rebuild
+# Sync latest data and rebuild locally
 python sync_resume.py
 xelatex -output-directory=out -aux-directory=auxil src/resume.tex
 ```
 
 ### Customize Data
-- Edit `data.json` locally for testing
-- Push changes to portfolio repo for live updates
-- Script automatically uses local data when available
+- Edit `data.json` in your portfolio repo
+- Workflow automatically syncs and creates PR within 6 hours
+- Or push .tex changes directly - workflow will build PDF and create PR
+- Script automatically uses local `data2.json` if available
 
 ---
 
