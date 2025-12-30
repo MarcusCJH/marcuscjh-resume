@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:  # Manual trigger - test without committing to master
 
 jobs:
   build-and-deploy:
@@ -19,75 +22,85 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🧠 Check for LaTeX-related changes
-        id: check_changes
-        continue-on-error: true
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: 🔄 Sync and check for changes
+        id: check
         run: |
-          echo "Checking for LaTeX-related changes..."
-          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '\.tex$|\.sty$|sections/|styles/' || true)
-          if [ -z "$CHANGED" ]; then
-            echo "No relevant LaTeX changes."
-            echo "should_skip=true" >> $GITHUB_OUTPUT
+          # Sync data.json for scheduled/manual runs
+          if [ "${{ github.event_name }}" != "push" ]; then
+            echo "Syncing data from portfolio..."
+            python sync_resume.py
+          fi
+          
+          # Check for changes
+          if [ "${{ github.event_name }}" == "push" ]; then
+            # Check what changed in the push
+            CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '\.tex$|\.sty$|sections/|styles/' || true)
           else
-            echo "Changes detected."
-            echo "should_skip=false" >> $GITHUB_OUTPUT
+            # Check if sync updated sections
+            CHANGED=$(git diff --name-only src/sections/ | grep -E '\.tex$' || true)
+          fi
+          
+          if [ -z "$CHANGED" ]; then
+            echo "No changes detected"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected: $CHANGED"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: ⛔ Skip Build (no changes)
-        if: steps.check_changes.outputs.should_skip == 'true'
+      - name: ⛔ Exit if no changes
+        if: steps.check.outputs.has_changes == 'false'
         run: |
-          echo "✅ Skipping build: No LaTeX file changes."
+          echo "✅ No changes detected. Exiting."
+          exit 0
 
-      - name: 🧱 Set up LaTeX
-        if: steps.check_changes.outputs.should_skip == 'false'
+      - name: 🧱 Build PDF
         uses: xu-cheng/latex-action@v3
         with:
           root_file: resume.tex
           working_directory: src
 
-      - name: 📁 Move PDF to docs/
-        if: steps.check_changes.outputs.should_skip == 'false'
+      - name: 📁 Move PDF
         run: |
           mkdir -p docs
           mv src/resume.pdf docs/resume.pdf
 
-      - name: 🔍 Check if resume.pdf has changed
-        if: steps.check_changes.outputs.should_skip == 'false'
-        id: check_diff
+      - name: 📦 Stage changes
         run: |
-          if git diff --quiet docs/resume.pdf; then
-            echo "No changes in PDF"
-            echo "changed=false" >> $GITHUB_OUTPUT
-          else
-            echo "PDF has changed"
-            echo "changed=true" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" != "push" ]; then
+            git add src/sections/
           fi
+          git add docs/resume.pdf
+          git status --short
 
-      - name: 📅 Generate date string
-        if: steps.check_diff.outputs.changed == 'true'
+      - name: 📅 Generate date
         id: date
         run: |
-          DATE=$(date +%Y%m%d)
-          echo "date=$DATE" >> $GITHUB_OUTPUT
+          echo "date=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
 
-      - name: 📝 Create Pull Request for resume.pdf
-        if: steps.check_diff.outputs.changed == 'true'
+      - name: 📝 Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "[GA] Update resume.pdf - ${{ steps.date.outputs.date }}"
-          title: "[GA] Update resume.pdf - ${{ steps.date.outputs.date }}"
-          body: |
-            Automated update of resume.pdf from GitHub Actions
+          commit-message: |
+            [GA] Update resume - ${{ steps.date.outputs.date }}
             
-            This PR contains the latest version of the resume PDF generated from LaTeX source files.
-          branch: update-resume-pdf-${{ steps.date.outputs.date }}
+            - Sections synced from data.json
+            - PDF rebuilt
+          title: "[GA] Update resume - ${{ steps.date.outputs.date }}"
+          body: |
+            Automated update of resume from GitHub Actions
+            
+            - Sections synced from data.json
+            - PDF rebuilt with latest data
+          branch: update-resume-${{ steps.date.outputs.date }}
           delete-branch: true
           assignees: MarcusCJH
           reviewers: MarcusCJH
           author: Marcus Chan <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
           committer: Marcus Chan <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
-
-      - name: ✅ Done
-        if: steps.check_changes.outputs.should_skip == 'false'
-        run: echo "Workflow complete."
