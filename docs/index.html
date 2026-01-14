@@ -7,18 +7,625 @@
     <meta http-equiv='expires' content='0'> 
     <meta http-equiv='pragma' content='no-cache'>
     <title>Resume - Marcus CJH</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; border: 0; }
-        body, iframe { width: 100%; height: 100vh; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: #ffffff;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px 40px;
+        }
+
+        /* Header Section - ATS Friendly */
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #000;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #000;
+            letter-spacing: 0.5px;
+        }
+
+        .header .contact {
+            font-size: 0.95em;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0 10px;
+        }
+
+        .header .contact .separator {
+            color: #333;
+            margin: 0 5px;
+        }
+
+        .header .contact a {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        .header .contact a:hover {
+            color: #1d4ed8;
+        }
+
+        /* Section Styling */
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 5px;
+        }
+
+        /* Experience Section */
+        .experience-item {
+            margin-bottom: 25px;
+        }
+
+        .experience-header {
+            margin-bottom: 8px;
+        }
+
+        .experience-header .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 3px;
+        }
+
+        .experience-header .job-title {
+            font-size: 1.15em;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .experience-header .date {
+            font-size: 0.95em;
+            color: #333;
+        }
+
+        .experience-header .company-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 0.95em;
+        }
+
+        .experience-header .company {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .experience-header .location {
+            color: #666;
+        }
+
+        .experience-content {
+            margin-top: 8px;
+            margin-left: 0.15in; /* Match LaTeX leftmargin=0.15in */
+        }
+
+        .experience-content .sub-role {
+            font-weight: 600;
+            color: #000;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-size: 1em;
+            padding-left: 0;
+        }
+
+        .experience-content .sub-role strong {
+            font-weight: 700;
+        }
+
+        .experience-content ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* Nested list (bullet points under sub-roles) */
+        .experience-content .sub-role + ul {
+            margin-left: 0.3in; /* Additional indentation for nested items */
+        }
+
+        .experience-content li {
+            padding: 3px 0;
+            padding-left: 20px;
+            position: relative;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .experience-content li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #000;
+            font-weight: normal;
+        }
+
+        /* Skills Section */
+        .skills-content {
+            margin-top: 10px;
+        }
+
+        .skill-category {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .skill-category .category-name {
+            font-weight: 700;
+            color: #000;
+            display: inline;
+        }
+
+        .skill-category .category-value {
+            color: #333;
+            margin-left: 5px;
+        }
+
+        /* Certifications */
+        .cert-item {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .cert-item .cert-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .cert-item .cert-left {
+            flex: 1;
+        }
+
+        .cert-item .cert-name {
+            font-weight: 700;
+            color: #000;
+            display: inline;
+        }
+
+        .cert-item .cert-org {
+            color: #333;
+            margin-left: 5px;
+        }
+
+        .cert-item .cert-year {
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        /* Education */
+        .edu-item {
+            margin-bottom: 15px;
+        }
+
+        .edu-item .edu-company-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 3px;
+            font-size: 0.95em;
+        }
+
+        .edu-item .edu-school {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .edu-item .edu-location {
+            color: #666;
+        }
+
+        .edu-item .edu-degree-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .edu-item .edu-degree {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .edu-item .edu-date {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .edu-item .edu-details {
+            margin-top: 5px;
+            margin-left: 20px;
+        }
+
+        .edu-item .edu-details li {
+            padding: 2px 0;
+            color: #333;
+        }
+
+        /* Download Button */
+        .download-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #ddd;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: #000;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+            border: 2px solid #000;
+        }
+
+        .download-btn:hover {
+            background: #333;
+            border-color: #333;
+        }
+
+        .download-btn i {
+            margin-right: 8px;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                padding: 20px;
+                max-width: 100%;
+            }
+            .download-section {
+                display: none;
+            }
+            .header {
+                border-bottom: 2px solid #000;
+            }
+            .section-title {
+                border-bottom: 1px solid #000;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .header .contact {
+                font-size: 0.85em;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .loading i {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
-    <iframe src=""></iframe>
+    <div class="container">
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading resume...</p>
+        </div>
+        <div id="resume-content" style="display: none;">
+            <!-- Content will be populated by JavaScript -->
+        </div>
+    </div>
+
     <script>
-        var pdf = new URL("resume.pdf", location.href).href + "?t=" + Date.now();
-        var iframe = document.querySelector("iframe");
-        iframe.src = location.protocol === "file:" ? pdf : 
-            "https://mozilla.github.io/pdf.js/web/viewer.html?file=" + encodeURIComponent(pdf);
+        // Fetch data from marcuscjh.com/data.json
+        async function loadResume() {
+            try {
+                const response = await fetch('https://marcuscjh.com/data.json');
+                const data = await response.json();
+                renderResume(data);
+            } catch (error) {
+                console.error('Error loading resume data:', error);
+                document.getElementById('loading').innerHTML = 
+                    '<p style="color: #dc2626;">Error loading resume data. Please try again later.</p>';
+            }
+        }
+
+        function renderResume(data) {
+            const config = data.config || {};
+            const timeline = data.timeline || [];
+            const social = data.social || [];
+            const skills = data.skills || {};
+            
+            const resumeContent = document.getElementById('resume-content');
+            
+            // Extract work experience, education, and certifications
+            const workExp = timeline.filter(item => item.category === 'work').sort((a, b) => (b.order || 0) - (a.order || 0));
+            const education = timeline.filter(item => item.category === 'education').sort((a, b) => (b.order || 0) - (a.order || 0));
+            const certifications = timeline.filter(item => item.category === 'certification').sort((a, b) => (b.order || 0) - (a.order || 0));
+            
+            // Get LinkedIn URL
+            const linkedin = social.find(s => s.platform && s.platform.toLowerCase() === 'linkedin');
+            
+            // Build contact string (ATS format: email | website | linkedin)
+            const contactParts = [];
+            if (config.email) contactParts.push(`<a href="mailto:${escapeHtml(config.email)}">${escapeHtml(config.email)}</a>`);
+            if (config.website) {
+                const websiteDisplay = config.website.replace('https://', '').replace('http://', '');
+                contactParts.push(`<a href="${escapeHtml(config.website)}" target="_blank">${escapeHtml(websiteDisplay)}</a>`);
+            }
+            if (linkedin && linkedin.url) {
+                const linkedinDisplay = linkedin.url.replace('https://', '').replace('http://', '').replace('www.', '');
+                contactParts.push(`<a href="${escapeHtml(linkedin.url)}" target="_blank">${escapeHtml(linkedinDisplay)}</a>`);
+            }
+            
+            let html = `
+                <div class="header">
+                    <h1>${escapeHtml(config.real_name || config.name || 'Marcus Chan')}</h1>
+                    <div class="contact">
+                        ${contactParts.map((part, i) => 
+                            i > 0 ? `<span class="separator">|</span> ${part}` : part
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+
+            // EXPERIENCE Section
+            if (workExp.length > 0) {
+                html += `<div class="section"><h2 class="section-title">Experience</h2>`;
+                
+                workExp.forEach(item => {
+                    const modal = item.modalContent || {};
+                    const details = modal.details || [];
+                    const location = modal.location || '';
+                    const dateRange = item.endDate && item.endDate !== 'Present' 
+                        ? `${item.startDate} -- ${item.endDate}` 
+                        : `${item.startDate} -- Present`;
+                    
+                    html += `
+                        <div class="experience-item">
+                            <div class="experience-header">
+                                <div class="title-row">
+                                    <div class="job-title">${escapeHtml(item.title || '')}</div>
+                                    <div class="date">${dateRange}</div>
+                                </div>
+                                <div class="company-row">
+                                    <div class="company">${escapeHtml(item.company || '')}</div>
+                                    ${location ? `<div class="location">${escapeHtml(location)}</div>` : ''}
+                                </div>
+                            </div>
+                            <div class="experience-content">
+                    `;
+                    
+                    // Process details to handle sub-roles and bullet points
+                    // Sub-roles are lines that contain dates in parentheses like "(2024 - Present)" or "(2022 - 2024)"
+                    // and may start with "•" or have bold formatting
+                    let currentListOpen = false;
+                    
+                    details.forEach((detail, index) => {
+                        const trimmed = detail.trim();
+                        if (!trimmed) return;
+                        
+                        // Check if this is a sub-role header
+                        // Pattern: contains parentheses with dates, or starts with bullet and has " - " separator
+                        const hasDatePattern = /\(.*?(?:Present|\d{4}).*?\)/.test(trimmed);
+                        const hasRoleSeparator = trimmed.includes(' - ') && !trimmed.startsWith('  •');
+                        const isSubRole = hasDatePattern || (hasRoleSeparator && trimmed.length < 150 && !trimmed.startsWith('  •'));
+                        
+                        if (isSubRole) {
+                            // Close previous list if open
+                            if (currentListOpen) {
+                                html += `</ul>`;
+                                currentListOpen = false;
+                            }
+                            
+                            // Format sub-role - remove leading bullet if present
+                            let subRoleText = trimmed;
+                            if (subRoleText.startsWith('•')) {
+                                subRoleText = subRoleText.substring(1).trim();
+                            }
+                            
+                            // Handle bold formatting (markdown style **text**)
+                            let subRoleHtml = subRoleText;
+                            if (subRoleHtml.includes('**')) {
+                                subRoleHtml = subRoleHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                            } else {
+                                // If no bold markers, wrap the entire sub-role in bold
+                                subRoleHtml = `<strong>${escapeHtml(subRoleText)}</strong>`;
+                            }
+                            
+                            // Add bullet point before sub-role
+                            html += `<div class="sub-role">• ${subRoleHtml}</div>`;
+                            html += `<ul>`;
+                            currentListOpen = true;
+                        } else if (trimmed.startsWith('  •')) {
+                            // Nested bullet point (indented)
+                            if (!currentListOpen) {
+                                html += `<ul>`;
+                                currentListOpen = true;
+                            }
+                            const bulletText = trimmed.substring(2).trim();
+                            html += `<li>${escapeHtml(bulletText)}</li>`;
+                        } else if (trimmed.startsWith('•')) {
+                            // Regular bullet point
+                            if (!currentListOpen) {
+                                html += `<ul>`;
+                                currentListOpen = true;
+                            }
+                            const bulletText = trimmed.substring(1).trim();
+                            html += `<li>${escapeHtml(bulletText)}</li>`;
+                        } else if (trimmed) {
+                            // Regular text line
+                            if (!currentListOpen) {
+                                html += `<ul>`;
+                                currentListOpen = true;
+                            }
+                            html += `<li>${escapeHtml(trimmed)}</li>`;
+                        }
+                    });
+                    
+                    // Close any open list
+                    if (currentListOpen) {
+                        html += `</ul>`;
+                    }
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+
+            // TECHNICAL SKILLS Section
+            if (Object.keys(skills).length > 0) {
+                html += `<div class="section"><h2 class="section-title">Technical Skills</h2><div class="skills-content">`;
+                
+                Object.entries(skills).forEach(([category, technologies]) => {
+                    if (technologies && Array.isArray(technologies) && technologies.length > 0) {
+                        // Format category name (replace underscores with &, title case)
+                        const categoryName = category.replace(/_/g, ' & ').replace(/\b\w/g, l => l.toUpperCase());
+                        const techList = technologies.sort().join(', ');
+                        
+                        html += `
+                            <div class="skill-category">
+                                <span class="category-name">${escapeHtml(categoryName)}</span>
+                                <span class="category-value">: ${escapeHtml(techList)}</span>
+                            </div>
+                        `;
+                    }
+                });
+                
+                html += `</div></div>`;
+            }
+
+            // CERTIFICATIONS Section
+            if (certifications.length > 0) {
+                html += `<div class="section"><h2 class="section-title">Certifications</h2>`;
+                
+                certifications.forEach(item => {
+                    // Extract year from date (e.g., "Apr 2025" -> "2025")
+                    const dateRange = item.startDate || '';
+                    const year = dateRange.split(' ').pop() || dateRange;
+                    
+                    html += `
+                        <div class="cert-item">
+                            <div class="cert-row">
+                                <div class="cert-left">
+                                    <span class="cert-name">${escapeHtml(item.title || '')}</span>
+                                    <span class="cert-org">- ${escapeHtml(item.company || '')}</span>
+                                </div>
+                                <div class="cert-year">${escapeHtml(year)}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+
+            // EDUCATION Section
+            if (education.length > 0) {
+                html += `<div class="section"><h2 class="section-title">Education</h2>`;
+                
+                education.forEach(item => {
+                    const modal = item.modalContent || {};
+                    const details = modal.details || [];
+                    const location = modal.location || '';
+                    const dateRange = item.endDate 
+                        ? `${item.startDate} -- ${item.endDate}` 
+                        : item.startDate;
+                    
+                    html += `
+                        <div class="edu-item">
+                            <div class="edu-company-row">
+                                <div class="edu-school">${escapeHtml(item.company || '')}</div>
+                                ${location ? `<div class="edu-location">${escapeHtml(location)}</div>` : ''}
+                            </div>
+                            <div class="edu-degree-row">
+                                <div class="edu-degree">${escapeHtml(item.title || '')}</div>
+                                ${dateRange ? `<div class="edu-date">${escapeHtml(dateRange)}</div>` : ''}
+                            </div>
+                            ${details.length > 0 ? `
+                                <ul class="edu-details">
+                                    ${details.map(d => `<li>${escapeHtml(d)}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+
+            // Download button
+            html += `
+                <div class="download-section">
+                    <a href="resume.pdf" class="download-btn" download>
+                        <i class="fas fa-download"></i> Download Full Resume (PDF)
+                    </a>
+                </div>
+            `;
+
+            resumeContent.innerHTML = html;
+            document.getElementById('loading').style.display = 'none';
+            resumeContent.style.display = 'block';
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load resume on page load
+        loadResume();
     </script>
 </body>
 </html>
