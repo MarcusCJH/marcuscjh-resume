@@ -661,8 +661,7 @@
         });
 
         // Initialize theme
-        const savedTheme = localStorage.getItem('theme') || 
-            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         setTheme(savedTheme);
 
         // Scroll Reveal Observer
