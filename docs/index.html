@@ -580,6 +580,17 @@
 
         /* Print Styles */
         @media print {
+            body::before {
+                content: 'For best printing results, please use the PDF version: resume.pdf';
+                display: block;
+                padding: 20px;
+                background: #fef3c7;
+                border: 2px solid #f59e0b;
+                margin: 20px;
+                text-align: center;
+                font-weight: 600;
+                color: #92400e;
+            }
             body { background: white; padding: 0; }
             .glass-panel { border: none; box-shadow: none; padding: 0; background: transparent; backdrop-filter: none; }
             .theme-toggle, .download-section, .section-title::after { display: none; }
@@ -676,8 +687,7 @@
         // Fetch data from marcuscjh.com/data.json
         async function loadResume() {
             try {
-                // Use www subdomain to avoid CORS redirect issues
-                const response = await fetch('https://www.marcuscjh.com/data.json');
+                const response = await fetch('https://marcuscjh.com/data.json');
                 const data = await response.json();
                 renderResume(data);
                 
@@ -867,6 +877,26 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        // Intercept print events to use PDF version
+        window.addEventListener('beforeprint', function() {
+            // Open PDF when print is triggered
+            window.open('resume.pdf', '_blank');
+        });
+
+        // Handle Ctrl+P / Cmd+P keyboard shortcut
+        window.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                window.open('resume.pdf', '_blank');
+            }
+        });
+
+        // Also handle the print menu/button click
+        window.addEventListener('afterprint', function() {
+            // PDF should already be open from beforeprint, but ensure it's accessible
+            window.open('resume.pdf', '_blank');
+        });
 
         loadResume();
     </script>
