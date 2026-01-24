@@ -676,7 +676,8 @@
         // Fetch data from marcuscjh.com/data.json
         async function loadResume() {
             try {
-                const response = await fetch('https://marcuscjh.com/data.json');
+                // Use www subdomain to avoid CORS redirect issues
+                const response = await fetch('https://www.marcuscjh.com/data.json');
                 const data = await response.json();
                 renderResume(data);
                 
