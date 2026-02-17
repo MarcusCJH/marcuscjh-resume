@@ -85,7 +85,7 @@ jobs:
             
             - Sections synced from data.json
             - PDF rebuilt with latest data
-          branch: update-resume-${{ steps.date.outputs.date }}
+          branch: update-resume
           delete-branch: true
           assignees: MarcusCJH
           reviewers: MarcusCJH
