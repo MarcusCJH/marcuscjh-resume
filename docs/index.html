@@ -3,393 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv='cache-control' content="no-cache, no-store, must-revalidate"> 
-    <meta http-equiv='expires' content='0'> 
-    <meta http-equiv='pragma' content='no-cache'>
-    <title>Resume - Marcus CJH</title>
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="pragma" content="no-cache">
+    <title>Marcus Chan — Resume &amp; CV</title>
+    <meta name="description" content="Technical Lead · Cloud &amp; Full-Stack. Download the curated resume or full CV.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            /* Light Theme */
-            --bg-color: #f8fafc;
-            --container-bg: rgba(255, 255, 255, 0.8);
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --accent-color: #6366f1;
-            --accent-hover: #4f46e5;
-            --border-color: rgba(226, 232, 240, 0.8);
-            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --header-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --color-foreground: #09090B;
+            --color-secondary: #3F3F46;
+            --color-muted-fg: #475569;
+            --color-border: #E4E4E7;
+            --color-muted: #E8ECF0;
+            --color-background: #FAFAFA;
+            --color-card: #FFFFFF;
+            --color-accent: #2563EB;
+            --color-on-accent: #FFFFFF;
+            --radius: 6px;
+            --font-display: "Archivo", sans-serif;
+            --font-body: "Space Grotesk", sans-serif;
+            --ring: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-accent);
         }
 
         [data-theme="dark"] {
-            --bg-color: #020617;
-            --container-bg: rgba(15, 23, 42, 0.8);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-color: #818cf8;
-            --accent-hover: #a5b4fc;
-            --border-color: rgba(30, 41, 59, 0.8);
-            --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
-            --glass-bg: rgba(15, 23, 42, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --header-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --color-foreground: #FAFAFA;
+            --color-secondary: #A1A1AA;
+            --color-muted-fg: #A1A1AA;
+            --color-border: #27272A;
+            --color-muted: #18181B;
+            --color-background: #09090B;
+            --color-card: #0C0C0E;
+            --color-accent: #3B82F6;
+            --color-on-accent: #FFFFFF;
+            --ring: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-accent);
         }
 
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+            .section { opacity: 1 !important; transform: none !important; }
+            .hero-brand { opacity: 1 !important; transform: none !important; }
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            line-height: 1.5;
-            color: var(--text-primary);
-            background: var(--bg-color);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.12) 0px, transparent 50%);
+            font-family: var(--font-body);
+            line-height: 1.55;
+            color: var(--color-foreground);
+            background:
+                linear-gradient(180deg, var(--color-muted) 0%, transparent 28%),
+                var(--color-background);
             background-attachment: fixed;
             min-height: 100vh;
-            padding: 30px 4%;
+            min-height: 100dvh;
+            width: 100%;
+            overflow-x: hidden;
+            padding: clamp(12px, 2.2vw, 36px) clamp(12px, 4vw, 48px);
+        }
+
+        a {
+            color: var(--color-accent);
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: none;
+            box-shadow: var(--ring);
         }
 
         .container {
             width: 100%;
             max-width: 100%;
             margin: 0 auto;
-            position: relative;
         }
 
-        /* Glassmorphism card effect */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: var(--card-shadow);
-        }
-
-        /* Resume Grid Layout */
-        .resume-grid {
-            display: grid;
-            grid-template-columns: 1.6fr 1.1fr;
-            gap: 30px;
-            align-items: start;
-        }
-
-        .main-col {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .side-col {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        /* Theme Toggle */
         .theme-toggle {
             position: fixed;
-            top: 15px;
-            right: 15px;
+            top: 16px;
+            right: 16px;
             z-index: 1000;
-            background: var(--glass-bg);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--glass-border);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius);
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            color: var(--text-primary);
-            box-shadow: var(--card-shadow);
+            color: var(--color-foreground);
             font-size: 1rem;
         }
 
         .theme-toggle:hover {
-            transform: scale(1.1) rotate(15deg);
+            border-color: var(--color-accent);
+            color: var(--color-accent);
         }
 
-        /* Header Section */
-        .header {
-            text-align: left;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            flex-wrap: wrap;
-            gap: 15px;
+        /* Hero */
+        .hero {
+            padding: 12px 0 28px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid var(--color-border);
+            position: relative;
         }
 
-        .header-left {
-            flex: 1;
+        .hero::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -1px;
+            width: 48px;
+            height: 2px;
+            background: var(--color-accent);
         }
 
-        .header h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2.6em;
-            font-weight: 800;
-            margin-bottom: 4px;
-            background: var(--header-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
+        .hero-brand {
+            font-family: var(--font-display);
+            font-size: clamp(2.25rem, 5vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.05;
+            color: var(--color-foreground);
+            margin-bottom: 8px;
             opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.8s forwards;
-            line-height: 1;
+            transform: translateY(12px);
+            animation: fadeInUp 0.6s ease forwards;
         }
 
-        .header .contact {
-            font-size: 0.85em;
-            color: var(--text-secondary);
+        .hero-tagline {
+            font-size: clamp(0.95rem, 1.1vw + 0.7rem, 1.15rem);
+            color: var(--color-secondary);
+            margin-bottom: 18px;
+            max-width: min(42rem, 100%);
+        }
+
+        .hero-actions {
             display: flex;
-            justify-content: flex-start;
             flex-wrap: wrap;
+            align-items: center;
+            gap: 12px 16px;
+        }
+
+        .contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .contact a {
+            color: var(--color-secondary);
+            text-decoration: none;
+            font-size: 0.88rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            background: var(--color-card);
+            cursor: pointer;
+        }
+
+        .contact a:hover {
+            color: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .cta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .download-btn {
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-            opacity: 0;
-            animation: fadeIn 1s 0.6s forwards;
-        }
-
-        .header .contact a {
-            color: var(--text-primary);
+            background: var(--color-accent);
+            color: var(--color-on-accent);
+            padding: 10px 18px;
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 3px 8px;
-            border-radius: 8px;
-            background: rgba(99, 102, 241, 0.04);
-            border: 1px solid transparent;
-            white-space: nowrap;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--color-accent);
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
         }
 
-        .header .contact a:hover {
-            background: rgba(99, 102, 241, 0.08);
-            border-color: var(--accent-color);
+        .download-btn:hover {
+            filter: brightness(1.08);
             transform: translateY(-1px);
-            color: var(--accent-color);
+            color: var(--color-on-accent);
         }
 
-        /* Section Styling */
+        .download-btn.secondary {
+            background: var(--color-card);
+            color: var(--color-foreground);
+            border-color: var(--color-border);
+        }
+
+        .download-btn.secondary:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            filter: none;
+        }
+
+        .panel {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: clamp(16px, 2.2vw, 36px);
+            width: 100%;
+        }
+
+        .resume-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr);
+            gap: clamp(16px, 2.5vw, 36px);
+            align-items: start;
+            width: 100%;
+        }
+
+        .main-col,
+        .side-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .content-block,
+        .experience-item {
+            min-width: 0;
+        }
+
         .section {
-            margin-bottom: 25px;
+            margin-bottom: 22px;
             opacity: 0;
-            transform: translateY(15px);
-        }
-
-        .section:last-child {
-            margin-bottom: 0;
+            transform: translateY(10px);
         }
 
         .section.revealed {
             opacity: 1;
-            transform: translateY(0);
-            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: none;
+            transition: opacity 0.45s ease, transform 0.45s ease;
         }
 
         .section-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.3em;
+            font-family: var(--font-display);
+            font-size: 1.05rem;
             font-weight: 700;
             margin-bottom: 12px;
-            color: var(--text-primary);
+            color: var(--color-foreground);
             display: flex;
             align-items: center;
             gap: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: -0.01em;
         }
 
         .section-title::after {
-            content: '';
+            content: "";
             height: 1px;
             flex-grow: 1;
-            background: linear-gradient(90deg, var(--accent-color), transparent);
+            background: linear-gradient(90deg, var(--color-accent), var(--color-border) 40%, transparent);
+        }
+
+        .section-title i {
+            color: var(--color-accent);
+            font-size: 0.9em;
+        }
+
+        .content-block {
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            background: var(--color-background);
+        }
+
+        .summary-text {
+            color: var(--color-secondary);
+            font-size: 0.95rem;
+            border-left: 3px solid var(--color-accent);
+            padding-left: 14px;
+        }
+
+        .experience-item {
+            margin-bottom: 22px;
+            padding-left: 18px;
+            border-left: 2px solid var(--color-border);
+            position: relative;
+        }
+
+        .experience-item:last-child { margin-bottom: 0; }
+
+        .experience-item::before {
+            content: "";
+            position: absolute;
+            left: -5px;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            background: var(--color-accent);
             border-radius: 1px;
         }
 
-        /* Experience Section */
-        .experience-item {
-            margin-bottom: 25px;
-            position: relative;
-            padding-left: 24px;
-            border-left: 2px solid var(--border-color);
-        }
-
-        .experience-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .experience-item::before {
-            content: '';
-            position: absolute;
-            left: -7px;
-            top: 4px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--accent-color);
-            box-shadow: 0 0 0 3px var(--bg-color);
-            z-index: 1;
-        }
-
-        [data-theme="dark"] .experience-item::before {
-            box-shadow: 0 0 0 3px #1e293b; /* Darker shadow for dark mode card */
-        }
-
-        .experience-header {
-            margin-bottom: 10px;
-        }
-
-        .experience-header .title-row {
+        .title-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
+            gap: 12px;
             margin-bottom: 4px;
-            gap: 15px;
         }
 
-        .experience-header .job-title {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.15em;
+        .job-title {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
             font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1.3;
         }
 
-        .experience-header .date {
-            font-size: 0.8em;
+        .date {
+            font-size: 0.78rem;
             font-weight: 600;
-            color: var(--accent-color);
-            background: rgba(99, 102, 241, 0.1);
-            padding: 4px 10px;
-            border-radius: 12px;
+            color: var(--color-muted-fg);
             white-space: nowrap;
+            border: 1px solid var(--color-border);
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: var(--color-card);
         }
 
-        .experience-header .company-row {
+        .company-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            font-size: 0.95em;
             gap: 10px;
+            font-size: 0.92rem;
+            color: var(--color-secondary);
+            margin-bottom: 8px;
         }
 
-        .experience-header .company {
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
+        .company { font-weight: 600; }
 
-        .experience-header .location {
-            color: var(--text-secondary);
-            font-size: 0.85em;
-            display: flex;
+        .location {
+            font-size: 0.85rem;
+            display: inline-flex;
             align-items: center;
             gap: 5px;
+            color: var(--color-muted-fg);
         }
 
-        .experience-content {
-            margin-top: 10px;
-        }
-
-        .experience-content .sub-role {
+        .sub-role {
             font-weight: 700;
-            color: var(--text-primary);
-            margin-top: 15px;
-            margin-bottom: 8px;
-            font-size: 1em;
+            margin-top: 12px;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
             padding-bottom: 4px;
-            border-bottom: 1px dashed var(--border-color);
+            border-bottom: 1px dashed var(--color-border);
         }
 
         .experience-content ul {
             list-style: none;
-            padding-left: 0;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
         }
 
         .experience-content li {
-            padding: 0;
-            padding-left: 20px;
+            padding-left: 16px;
             position: relative;
-            color: var(--text-secondary);
-            font-size: 0.9em;
-            line-height: 1.5;
+            color: var(--color-secondary);
+            font-size: 0.9rem;
         }
 
         .experience-content li::before {
-            content: '•';
+            content: "";
             position: absolute;
             left: 0;
-            color: var(--accent-color);
-            font-weight: bold;
+            top: 0.55em;
+            width: 5px;
+            height: 5px;
+            background: var(--color-muted-fg);
         }
 
-        /* Side Column Grid (Dashboard Style) */
-        .side-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        .skill-category { margin-bottom: 14px; }
+        .skill-category:last-child { margin-bottom: 0; }
 
-        /* Card Styles */
-        .content-card {
-            background: rgba(99, 102, 241, 0.03);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        [data-theme="dark"] .content-card {
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        /* Summary Section */
-        .summary-text {
-            color: var(--text-secondary);
-            font-size: 0.95em;
-            line-height: 1.6;
-        }
-
-        .skill-category {
-            margin-bottom: 15px;
-        }
-
-        .skill-category:last-child {
-            margin-bottom: 0;
-        }
-
-        .skill-category .category-name {
-            font-family: 'Outfit', sans-serif;
+        .category-name {
+            font-family: var(--font-display);
             font-weight: 700;
-            font-size: 0.85em;
-            color: var(--text-primary);
+            font-size: 0.78rem;
+            color: var(--color-muted-fg);
             display: block;
             margin-bottom: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.06em;
         }
 
         .skill-tags {
@@ -399,269 +425,178 @@
         }
 
         .skill-tag {
-            font-size: 0.75em;
-            background: var(--border-color);
-            color: var(--text-secondary);
-            padding: 3px 9px;
-            border-radius: 6px;
+            font-size: 0.75rem;
+            background: var(--color-muted);
+            color: var(--color-foreground);
+            padding: 4px 9px;
+            border-radius: 4px;
+            border: 1px solid var(--color-border);
             font-weight: 500;
-            border: 1px solid transparent;
         }
 
-        .skill-tag:hover {
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-            background: rgba(99, 102, 241, 0.05);
-        }
-
-        /* Certifications in Side Column */
-        .cert-list {
+        .cert-list, .edu-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .cert-item {
-            padding: 10px 14px;
-            background: rgba(99, 102, 241, 0.02);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+        .cert-item, .edu-item {
+            padding: 10px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+            background: var(--color-card);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.2s ease;
-        }
-
-        .cert-item:hover {
-            border-color: var(--accent-color);
-            transform: translateX(4px);
-            background: rgba(99, 102, 241, 0.04);
-        }
-
-        .cert-info {
-            flex: 1;
-        }
-
-        .cert-name {
-            font-weight: 700;
-            font-size: 0.9em;
-            color: var(--text-primary);
-            line-height: 1.3;
-        }
-
-        .cert-org {
-            color: var(--text-secondary);
-            font-size: 0.8em;
-            margin-top: 2px;
-        }
-
-        .cert-year {
-            font-weight: 600;
-            color: var(--accent-color);
-            font-size: 0.8em;
-            margin-left: 15px;
-            white-space: nowrap;
-            background: rgba(99, 102, 241, 0.08);
-            padding: 2px 8px;
-            border-radius: 8px;
-        }
-
-        /* Education */
-        .edu-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            gap: 10px;
         }
 
         .edu-item {
-            padding: 14px;
-            border-radius: 14px;
-            background: rgba(99, 102, 241, 0.02);
-            border: 1px solid var(--border-color);
-            transition: all 0.2s ease;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        .edu-item:hover {
-            border-color: var(--accent-color);
-            transform: translateX(4px);
-            background: rgba(99, 102, 241, 0.04);
-        }
-
-        .edu-school {
-            font-family: 'Outfit', sans-serif;
+        .cert-name, .edu-school {
             font-weight: 700;
-            font-size: 1.05em;
-            color: var(--text-primary);
-            line-height: 1.3;
+            font-size: 0.9rem;
+            font-family: var(--font-display);
+        }
+
+        .cert-org, .edu-meta {
+            color: var(--color-muted-fg);
+            font-size: 0.8rem;
+            margin-top: 2px;
         }
 
         .edu-degree {
             font-weight: 600;
-            color: var(--accent-color);
-            font-size: 0.9em;
+            color: var(--color-accent);
+            font-size: 0.88rem;
             margin-top: 4px;
         }
 
-        .edu-meta {
-            margin-top: 8px;
-            font-size: 0.8em;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .cert-year {
+            font-weight: 600;
+            color: var(--color-muted-fg);
+            font-size: 0.78rem;
+            border: 1px solid var(--color-border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
         }
 
-        .edu-meta span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Download Button */
-        .download-section {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .download-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--header-gradient);
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 0.9em;
-            border-radius: 50px;
-            box-shadow: 0 6px 12px -3px rgba(99, 102, 241, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.5);
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Loading Spinner */
         .loading {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 300px;
+            min-height: 240px;
+            color: var(--color-secondary);
+            gap: 12px;
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border-color);
-            border-top: 3px solid var(--accent-color);
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--color-border);
+            border-top-color: var(--color-accent);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
 
-        /* Print Styles */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @media print {
             body::before {
-                content: 'For best printing results, please use the PDF version (Download PDF button).';
+                content: "For best printing results, use Download Resume / CV PDF.";
                 display: block;
-                padding: 20px;
-                background: #fef3c7;
-                border: 2px solid #f59e0b;
-                margin: 20px;
+                padding: 16px;
+                background: var(--color-muted);
+                border: 1px solid var(--color-border);
+                margin-bottom: 16px;
                 text-align: center;
                 font-weight: 600;
-                color: #92400e;
             }
+            .theme-toggle, .cta-group { display: none !important; }
+            .section { opacity: 1 !important; transform: none !important; }
             body { background: white; padding: 0; }
-            .glass-panel { border: none; box-shadow: none; padding: 0; background: transparent; backdrop-filter: none; }
-            .theme-toggle, .download-section, .section-title::after { display: none; }
-            .section { opacity: 1 !important; transform: none !important; margin-bottom: 20px; }
-            .resume-grid { grid-template-columns: 1.6fr 1fr; gap: 20px; }
-            .content-card { background: transparent; border: 1px solid #e2e8f0; box-shadow: none; padding: 15px; }
-            .experience-item::before { background: #6366f1 !important; print-color-adjust: exact; }
-            .section-title { color: #0f172a !important; font-size: 1.1em; margin-bottom: 8px; }
-            .section-title i { color: #6366f1 !important; }
-            .skill-tag { border: 1px solid #e2e8f0; background: transparent; color: #475569; }
-            .date, .cert-year { background: #f1f5f9 !important; border: 1px solid #e2e8f0; }
+            .panel { border: none; padding: 0; }
+        }
+
+        /* Ultrawide: keep fluid stretch; slightly roomier type/gaps */
+        @media (min-width: 1600px) {
+            .hero-brand {
+                font-size: clamp(2.75rem, 2.2vw, 3.5rem);
+            }
+            .resume-grid {
+                grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+                gap: clamp(28px, 2vw, 48px);
+            }
+        }
+
+        /* Tall / portrait desktop (vertical monitors) */
+        @media (orientation: portrait) and (min-width: 768px) {
+            .resume-grid {
+                grid-template-columns: 1fr;
+                max-width: 52rem;
+                margin-inline: auto;
+            }
+            .hero {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .resume-grid {
+                grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+            }
         }
 
         @media (max-width: 900px) {
-            body { padding: 10px; }
-            .resume-grid { grid-template-columns: 1fr; gap: 20px; }
-            .header { 
-                flex-direction: column; 
-                align-items: center; 
-                text-align: center;
-                padding-bottom: 15px;
-            }
-            .header-left { width: 100%; }
-            .header .contact { 
-                justify-content: center; 
-                gap: 10px;
-            }
-            .header .contact a {
-                padding: 6px 12px;
-                font-size: 0.9em;
-            }
-            .header h1 { font-size: 2.2em; margin-bottom: 10px; }
-            .glass-panel { padding: 20px 15px; border-radius: 16px; }
-            .content-card { padding: 15px; }
-            .download-section { width: 100%; margin-top: 5px; }
-            .download-btn { width: 100%; justify-content: center; }
-            .theme-toggle { top: 10px; right: 10px; width: 32px; height: 32px; font-size: 0.9rem; }
+            .resume-grid { grid-template-columns: 1fr; gap: 12px; }
+            .cta-group { margin-left: 0; width: 100%; }
+            .download-btn { flex: 1 1 auto; justify-content: center; min-height: 44px; }
+            .hero-actions { flex-direction: column; align-items: stretch; }
+            .contact { justify-content: flex-start; }
+            .theme-toggle { top: 10px; right: 10px; }
         }
 
         @media (max-width: 480px) {
-            .header h1 { font-size: 1.8em; }
-            .section-title { font-size: 1.15em; }
-            .experience-header .title-row { flex-direction: column; align-items: flex-start; gap: 5px; }
-            .experience-header .company-row { flex-direction: column; align-items: flex-start; gap: 3px; }
-            .experience-item { padding-left: 15px; }
-            .cert-item { flex-direction: column; align-items: flex-start; gap: 5px; }
-            .cert-year { margin-left: 0; align-self: flex-end; }
+            .contact a { font-size: 0.82rem; }
+            .title-row, .company-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .cert-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" id="theme-toggle" title="Toggle Dark/Light Mode">
-        <i class="fas fa-moon"></i>
+    <button type="button" class="theme-toggle" id="theme-toggle" title="Toggle dark / light mode" aria-label="Toggle dark / light mode">
+        <i class="fas fa-moon" aria-hidden="true"></i>
     </button>
     <div class="container">
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <p>Optimizing space...</p>
+        <div id="loading" class="loading" role="status">
+            <div class="spinner" aria-hidden="true"></div>
+            <p>Loading profile…</p>
         </div>
-        <div id="resume-content" class="glass-panel" style="display: none;">
-            <!-- Content will be populated by JavaScript -->
-        </div>
+        <div id="resume-content" class="panel" style="display: none;"></div>
     </div>
 
     <script>
-        // Theme Management
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = themeToggle.querySelector('i');
-        
+
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
@@ -669,38 +604,28 @@
         }
 
         themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+            const current = document.documentElement.getAttribute('data-theme');
+            setTheme(current === 'dark' ? 'light' : 'dark');
         });
 
-        // Initialize theme
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        setTheme(savedTheme);
+        setTheme(localStorage.getItem('theme') || 'light');
 
-        // Scroll Reveal Observer
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('revealed');
-                }
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const revealObserver = reduceMotion ? null : new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) entry.target.classList.add('revealed');
             });
         }, { threshold: 0.1 });
 
-        // Fetch data from marcuscjh.com/data.json
         async function loadResume() {
             try {
-                const response = await fetch('https://marcuscjh.com/data.json');
+                const response = await fetch('https://www.marcuscjh.com/data.json');
                 const data = await response.json();
                 renderResume(data);
-                
-                // Initialize reveal observer for newly added sections
-                document.querySelectorAll('.section').forEach(section => {
-                    revealObserver.observe(section);
-                });
             } catch (error) {
                 console.error('Error loading resume data:', error);
-                document.getElementById('loading').innerHTML = 
-                    '<p style="color: #ef4444; font-weight: 600;">Error loading resume data. Please try again later.</p>';
+                document.getElementById('loading').innerHTML =
+                    '<p style="color:#DC2626;font-weight:600;">Error loading resume data. Please try again later.</p>';
             }
         }
 
@@ -709,148 +634,143 @@
             const timeline = data.timeline || [];
             const social = data.social || [];
             const skills = data.skills || {};
-            
             const resumeContent = document.getElementById('resume-content');
-            
-            const workExp = timeline.filter(item => item.category === 'work').sort((a, b) => (b.order || 0) - (a.order || 0));
-            const education = timeline.filter(item => item.category === 'education').sort((a, b) => (b.order || 0) - (a.order || 0));
-            const certifications = timeline.filter(item => item.category === 'certification').sort((a, b) => (b.order || 0) - (a.order || 0));
-            
-            const linkedin = social.find(s => s.platform && s.platform.toLowerCase() === 'linkedin');
-            const github = social.find(s => s.platform && s.platform.toLowerCase() === 'github');
-            
+
+            const workExp = timeline.filter((i) => i.category === 'work').sort((a, b) => (b.order || 0) - (a.order || 0));
+            const education = timeline.filter((i) => i.category === 'education').sort((a, b) => (b.order || 0) - (a.order || 0));
+            const certifications = timeline.filter((i) => i.category === 'certification').sort((a, b) => (b.order || 0) - (a.order || 0));
+
+            const linkedin = social.find((s) => s.platform && s.platform.toLowerCase() === 'linkedin');
+            const github = social.find((s) => s.platform && s.platform.toLowerCase() === 'github');
+
             const contactParts = [];
-            if (config.email) contactParts.push(`<a href="mailto:${escapeHtml(config.email)}"><i class="fas fa-envelope"></i> ${escapeHtml(config.email)}</a>`);
-            if (config.website) contactParts.push(`<a href="${escapeHtml(config.website)}" target="_blank"><i class="fas fa-globe"></i> ${escapeHtml(config.website.replace(/https?:\/\//, ''))}</a>`);
-            if (linkedin && linkedin.url) contactParts.push(`<a href="${escapeHtml(linkedin.url)}" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>`);
-            if (github && github.url) contactParts.push(`<a href="${escapeHtml(github.url)}" target="_blank"><i class="fab fa-github"></i> GitHub</a>`);
-            
+            if (config.email) contactParts.push(`<a href="mailto:${escapeHtml(config.email)}"><i class="fas fa-envelope" aria-hidden="true"></i> ${escapeHtml(config.email)}</a>`);
+            if (config.website) contactParts.push(`<a href="${escapeHtml(config.website)}" target="_blank" rel="noopener noreferrer"><i class="fas fa-globe" aria-hidden="true"></i> ${escapeHtml(config.website.replace(/https?:\/\//, ''))}</a>`);
+            if (linkedin && linkedin.url) contactParts.push(`<a href="${escapeHtml(linkedin.url)}" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin" aria-hidden="true"></i> LinkedIn</a>`);
+            if (github && github.url) contactParts.push(`<a href="${escapeHtml(github.url)}" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>`);
+
+            const title = config.title || (config.cv && config.cv.title) || 'Technical Lead · Cloud & Full-Stack';
+            const stamp = new Date().toISOString().slice(0, 10);
+
             let html = `
-                <div class="header">
-                    <div class="header-left">
-                        <h1>${escapeHtml(config.real_name || config.name || 'Marcus Chan')}</h1>
-                        <div class="contact">
-                            ${contactParts.join('')}
+                <header class="hero">
+                    <h1 class="hero-brand">${escapeHtml(config.real_name || config.name || 'Marcus Chan')}</h1>
+                    <p class="hero-tagline">${escapeHtml(title)}</p>
+                    <div class="hero-actions">
+                        <div class="contact">${contactParts.join('')}</div>
+                        <div class="cta-group">
+                            <a class="download-btn" href="resume.pdf" download="MarcusCJH_Resume_${stamp}.pdf">
+                                <i class="fas fa-file-arrow-down" aria-hidden="true"></i> Resume
+                            </a>
+                            <a class="download-btn secondary" href="cv.pdf" download="MarcusCJH_CV_${stamp}.pdf">
+                                <i class="fas fa-file-lines" aria-hidden="true"></i> CV
+                            </a>
                         </div>
                     </div>
-                    <div class="download-section">
-                        <a href="resume.pdf" class="download-btn" download="MarcusCJH_Resume_${new Date().toISOString().slice(0, 10)}.pdf">
-                            <i class="fas fa-cloud-download-alt"></i> Resume
-                        </a>
-                        <a href="cv.pdf" class="download-btn" download="MarcusCJH_CV_${new Date().toISOString().slice(0, 10)}.pdf">
-                            <i class="fas fa-cloud-download-alt"></i> CV (full)
-                        </a>
-                    </div>
-                </div>
-                
+                </header>
+
                 <div class="resume-grid">
                     <div class="main-col">
-                        <!-- SUMMARY Section -->
                         ${config.summary ? `
-                        <div class="section">
-                            <h2 class="section-title"><i class="fas fa-user-tie"></i> Summary</h2>
-                            <div class="content-card">
+                        <section class="section">
+                            <h2 class="section-title"><i class="fas fa-user-tie" aria-hidden="true"></i> Summary</h2>
+                            <div class="content-block">
                                 <div class="summary-text">${escapeHtml(config.summary)}</div>
                             </div>
-                        </div>
-                        ` : ''}
-                        
-                        <!-- EXPERIENCE Section -->
-                        <div class="section">
-                            <h2 class="section-title"><i class="fas fa-briefcase"></i> Experience</h2>
-                            <div class="content-card">
-                                ${workExp.map(item => {
-                                const modal = item.modalContent || {};
-                                const details = modal.details || [];
-                                const location = modal.location || '';
-                                const dateRange = item.endDate && item.endDate !== 'Present' ? `${item.startDate} — ${item.endDate}` : `${item.startDate} — Present`;
-                                
-                                let expHtml = `
-                                    <div class="experience-item">
-                                        <div class="experience-header">
-                                            <div class="title-row">
-                                                <div class="job-title">${escapeHtml(item.title || '')}</div>
-                                                <div class="date">${dateRange}</div>
+                        </section>` : ''}
+
+                        <section class="section">
+                            <h2 class="section-title"><i class="fas fa-briefcase" aria-hidden="true"></i> Experience</h2>
+                            <div class="content-block">
+                                ${workExp.map((item) => {
+                                    const modal = item.modalContent || {};
+                                    const details = modal.details || [];
+                                    const location = modal.location || '';
+                                    const dateRange = item.endDate && item.endDate !== 'Present'
+                                        ? `${item.startDate} — ${item.endDate}`
+                                        : `${item.startDate} — Present`;
+
+                                    let expHtml = `
+                                        <article class="experience-item">
+                                            <div class="experience-header">
+                                                <div class="title-row">
+                                                    <div class="job-title">${escapeHtml(item.title || '')}</div>
+                                                    <div class="date">${escapeHtml(dateRange)}</div>
+                                                </div>
+                                                <div class="company-row">
+                                                    <div class="company">${escapeHtml(item.company || '')}</div>
+                                                    ${location ? `<div class="location"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${escapeHtml(location)}</div>` : ''}
+                                                </div>
                                             </div>
-                                            <div class="company-row">
-                                                <div class="company">${escapeHtml(item.company || '')}</div>
-                                                ${location ? `<div class="location"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(location)}</div>` : ''}
-                                            </div>
-                                        </div>
-                                        <div class="experience-content">
-                                `;
-                                
-                                let currentListOpen = false;
-                                details.forEach(detail => {
-                                    const trimmed = detail.trim();
-                                    if (!trimmed) return;
-                                    const isSubRole = /\(.*?(?:Present|\d{4}).*?\)/.test(trimmed) || (trimmed.includes(' - ') && !trimmed.startsWith('  •') && trimmed.length < 150);
-                                    
-                                    if (isSubRole) {
-                                        if (currentListOpen) { expHtml += `</ul>`; currentListOpen = false; }
-                                        let subRoleHtml = trimmed.startsWith('•') ? trimmed.substring(1).trim() : trimmed;
-                                        subRoleHtml = subRoleHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                                        if (!trimmed.includes('**')) subRoleHtml = `<strong>${subRoleHtml}</strong>`;
-                                        expHtml += `<div class="sub-role">${subRoleHtml}</div>`;
-                                        expHtml += `<ul>`; currentListOpen = true;
-                                    } else {
-                                        if (!currentListOpen) { expHtml += `<ul>`; currentListOpen = true; }
-                                        const text = trimmed.replace(/^(\s*•|\s*-\s*)/, '').trim();
-                                        expHtml += `<li>${escapeHtml(text)}</li>`;
-                                    }
-                                });
-                                if (currentListOpen) expHtml += `</ul>`;
-                                expHtml += `</div></div>`;
-                                return expHtml;
-                            }).join('')}
+                                            <div class="experience-content">`;
+
+                                    let currentListOpen = false;
+                                    details.forEach((detail) => {
+                                        const trimmed = detail.trim();
+                                        if (!trimmed) return;
+                                        const isSubRole = /\(.*?(?:Present|\d{4}).*?\)/.test(trimmed)
+                                            || (trimmed.includes(' - ') && !trimmed.startsWith('  •') && trimmed.length < 150);
+
+                                        if (isSubRole) {
+                                            if (currentListOpen) { expHtml += `</ul>`; currentListOpen = false; }
+                                            let subRoleHtml = trimmed.startsWith('•') ? trimmed.substring(1).trim() : trimmed;
+                                            subRoleHtml = subRoleHtml.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                                            if (!trimmed.includes('**')) subRoleHtml = `<strong>${subRoleHtml}</strong>`;
+                                            expHtml += `<div class="sub-role">${subRoleHtml}</div><ul>`;
+                                            currentListOpen = true;
+                                        } else {
+                                            if (!currentListOpen) { expHtml += `<ul>`; currentListOpen = true; }
+                                            const text = trimmed.replace(/^(\s*•|\s*-\s*)/, '').trim();
+                                            expHtml += `<li>${escapeHtml(text)}</li>`;
+                                        }
+                                    });
+                                    if (currentListOpen) expHtml += `</ul>`;
+                                    expHtml += `</div></article>`;
+                                    return expHtml;
+                                }).join('')}
                             </div>
-                        </div>
+                        </section>
                     </div>
-                    
+
                     <div class="side-col">
-                        <!-- TECHNICAL SKILLS -->
-                        <div class="section">
-                            <h2 class="section-title"><i class="fas fa-tools"></i> Skills</h2>
-                            <div class="content-card">
+                        <section class="section">
+                            <h2 class="section-title"><i class="fas fa-tools" aria-hidden="true"></i> Skills</h2>
+                            <div class="content-block">
                                 ${Object.entries(skills).map(([category, technologies]) => {
                                     if (!technologies || !technologies.length) return '';
-                                    const categoryName = category.replace(/_/g, ' & ').replace(/\b\w/g, l => l.toUpperCase());
+                                    const categoryName = category.replace(/_/g, ' & ').replace(/\b\w/g, (l) => l.toUpperCase());
                                     return `
                                         <div class="skill-category">
                                             <span class="category-name">${escapeHtml(categoryName)}</span>
                                             <div class="skill-tags">
-                                                ${technologies.sort().map(tech => `<span class="skill-tag">${escapeHtml(tech)}</span>`).join('')}
+                                                ${technologies.slice().sort().map((tech) => `<span class="skill-tag">${escapeHtml(tech)}</span>`).join('')}
                                             </div>
-                                        </div>
-                                    `;
+                                        </div>`;
                                 }).join('')}
                             </div>
-                        </div>
+                        </section>
 
-                        <!-- EDUCATION -->
-                        <div class="section">
-                            <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Education</h2>
-                            <div class="content-card">
+                        <section class="section">
+                            <h2 class="section-title"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Education</h2>
+                            <div class="content-block">
                                 <div class="edu-list">
-                                    ${education.map(item => `
+                                    ${education.map((item) => `
                                         <div class="edu-item">
                                             <div class="edu-school">${escapeHtml(item.company || '')}</div>
                                             <div class="edu-degree">${escapeHtml(item.title || '')}</div>
                                             <div class="edu-meta">
-                                                <span><i class="fas fa-calendar-alt"></i> ${item.startDate}${item.endDate ? ' — ' + item.endDate : ''}</span>
+                                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> ${escapeHtml(item.startDate || '')}${item.endDate ? ' — ' + escapeHtml(item.endDate) : ''}</span>
                                             </div>
-                                        </div>
-                                    `).join('')}
+                                        </div>`).join('')}
                                 </div>
                             </div>
-                        </div>
+                        </section>
 
-                        <!-- CERTIFICATIONS -->
-                        <div class="section">
-                            <h2 class="section-title"><i class="fas fa-certificate"></i> Certifications</h2>
-                            <div class="content-card">
+                        <section class="section">
+                            <h2 class="section-title"><i class="fas fa-certificate" aria-hidden="true"></i> Certifications</h2>
+                            <div class="content-block">
                                 <div class="cert-list">
-                                    ${certifications.map(item => {
+                                    ${certifications.map((item) => {
                                         const year = (item.startDate || '').split(' ').pop() || '';
                                         return `
                                             <div class="cert-item">
@@ -859,21 +779,22 @@
                                                     <div class="cert-org">${escapeHtml(item.company || '')}</div>
                                                 </div>
                                                 <div class="cert-year">${escapeHtml(year)}</div>
-                                            </div>
-                                        `;
+                                            </div>`;
                                     }).join('')}
                                 </div>
                             </div>
-                        </div>
+                        </section>
                     </div>
-                </div>
-            `;
+                </div>`;
 
             resumeContent.innerHTML = html;
             document.getElementById('loading').style.display = 'none';
             resumeContent.style.display = 'block';
-            
-            document.querySelectorAll('.section').forEach(section => revealObserver.observe(section));
+
+            document.querySelectorAll('.section').forEach((section) => {
+                if (reduceMotion) section.classList.add('revealed');
+                else if (revealObserver) revealObserver.observe(section);
+            });
         }
 
         function escapeHtml(text) {
@@ -883,24 +804,12 @@
             return div.innerHTML;
         }
 
-        // Intercept print events to use PDF version
-        window.addEventListener('beforeprint', function() {
-            // Open PDF when print is triggered
-            window.open('resume.pdf', '_blank');
-        });
-
-        // Handle Ctrl+P / Cmd+P keyboard shortcut
-        window.addEventListener('keydown', function(e) {
+        window.addEventListener('beforeprint', () => window.open('resume.pdf', '_blank'));
+        window.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
                 e.preventDefault();
                 window.open('resume.pdf', '_blank');
             }
-        });
-
-        // Also handle the print menu/button click
-        window.addEventListener('afterprint', function() {
-            // PDF should already be open from beforeprint, but ensure it's accessible
-            window.open('resume.pdf', '_blank');
         });
 
         loadResume();

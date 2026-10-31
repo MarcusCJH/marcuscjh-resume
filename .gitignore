@@ -57,3 +57,9 @@ Thumbs.db
 ## One-off local copies (keep docs/*.pdf published outputs only)
 /CV_*.pdf
 /docs/photo.*
+## Portfolio data (source of truth: https://www.marcuscjh.com/data.json)
+/data.json
+/data2.json
+
+## Agent planning / design drafts
+docs/superpowers/
