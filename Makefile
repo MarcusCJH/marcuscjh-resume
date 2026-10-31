@@ -1,40 +1,63 @@
-# Local build targets matching IntelliJ / PyCharm run configs:
-#   Python.sync_resume -> sync_resume.py
-#   LaTeX.resume       -> pdflatex, out/, auxil/, cwd=src
+# Local build targets:
+#   CV     = full dossier (pdfLaTeX)  -> out/cv.pdf
+#   Resume = curated one-pager (XeLaTeX) -> out/resume.pdf
 
 PYTHON ?= python
-PDF := out/resume.pdf
+CV_PDF := out/cv.pdf
+RESUME_PDF := out/resume.pdf
 
-.PHONY: help sync pdf build open clean
+.PHONY: help sync cv resume pdf build open open-cv open-resume clean
 
 help:
 	@echo.
-	@echo   sync    sync sections from data.json
-	@echo   pdf     compile out/resume.pdf
-	@echo   build   sync + pdf
-	@echo   open    open out/resume.pdf
-	@echo   clean   remove out/ and auxil/
+	@echo   sync         sync CV + Resume sections from data.json
+	@echo   cv           compile out/cv.pdf          (full dossier, pdfLaTeX)
+	@echo   resume       compile out/resume.pdf      (curated one-pager, XeLaTeX)
+	@echo   pdf          alias for resume
+	@echo   build        sync + cv + resume
+	@echo   open-cv      open out/cv.pdf
+	@echo   open-resume  open out/resume.pdf
+	@echo   open         alias for open-resume
+	@echo   clean        remove out/ and auxil/
 	@echo.
 
 sync:
 	@echo [sync] Updating sections from data.json...
-	@$(PYTHON) sync_resume.py
+	@$(PYTHON) sync_resume.py --target all
 	@echo [sync] Done.
 
-pdf:
-	@echo [pdf] Compiling $(PDF)...
-	@$(PYTHON) -c "from pathlib import Path; Path('out').mkdir(exist_ok=True); Path('auxil').mkdir(exist_ok=True)"
-	@cd src && pdflatex -interaction=nonstopmode -output-directory=../out -aux-directory=../auxil resume.tex >nul
-	@echo [pdf] Done: $(PDF)
+cv:
+	@echo [cv] Compiling $(CV_PDF)...
+	@$(PYTHON) -c "from pathlib import Path; import subprocess, sys; \
+	Path('out').mkdir(exist_ok=True); out=str(Path('out').resolve()); \
+	r=subprocess.run(['pdflatex','-interaction=nonstopmode',f'-output-directory={out}','cv.tex'], cwd='src'); \
+	sys.exit(r.returncode)"
+	@echo [cv] Done: $(CV_PDF)
 
-build: sync pdf
+resume:
+	@echo [resume] Compiling $(RESUME_PDF)...
+	@$(PYTHON) -c "from pathlib import Path; import subprocess, sys; \
+	Path('out').mkdir(exist_ok=True); out=str(Path('out').resolve()); \
+	r=subprocess.run(['xelatex','-interaction=nonstopmode',f'-output-directory={out}','resume.tex'], cwd='src'); \
+	sys.exit(r.returncode)"
+	@echo [resume] Done: $(RESUME_PDF)
+
+pdf: resume
+
+build: sync cv resume
 	@echo [build] Done.
 
-open:
-	@$(PYTHON) -c "import os, sys; from pathlib import Path; p = Path(r'$(PDF)'); \
-	sys.exit('[open] $(PDF) not found. Run: make pdf') if not p.exists() else (os.startfile(str(p.resolve())), print('[open] $(PDF)'))"
+open-cv:
+	@$(PYTHON) -c "import os, sys; from pathlib import Path; p = Path(r'$(CV_PDF)'); \
+	sys.exit('[open-cv] missing') if not p.exists() else (os.startfile(str(p.resolve())), print('[open-cv] $(CV_PDF)'))"
+
+open-resume:
+	@$(PYTHON) -c "import os, sys; from pathlib import Path; p = Path(r'$(RESUME_PDF)'); \
+	sys.exit('[open-resume] missing') if not p.exists() else (os.startfile(str(p.resolve())), print('[open-resume] $(RESUME_PDF)'))"
+
+open: open-resume
 
 clean:
 	@echo [clean] Removing out/ and auxil/...
-	@$(PYTHON) -c "import shutil; [shutil.rmtree(p, ignore_errors=True) for p in ('out', 'auxil')]"
+	@$(PYTHON) -c "from pathlib import Path; import shutil; [shutil.rmtree(p, ignore_errors=True) for p in ('out', 'auxil')]"
 	@echo [clean] Done.

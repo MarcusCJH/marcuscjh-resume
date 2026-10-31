@@ -4,14 +4,89 @@ Resume Sync Script
 Fetches data.json from portfolio and updates LaTeX sections accordingly.
 """
 
+import argparse
 import json
 import os
 from pathlib import Path
 
+def infer_cv_density(entry: dict) -> str:
+    cv = entry.get("cv") or {}
+    if cv.get("density") in {"featured", "compact", "oneliner", "omit"}:
+        return cv["density"]
+    company = (entry.get("company") or "").lower()
+    if "accenture" in company:
+        return "featured"
+    if "whale" in company:
+        return "compact"
+    return "oneliner"
+
+CV_SKILL_LABELS = {
+    "aws": "AWS",
+    "alicloud": "Alibaba Cloud",
+    "devops": "DevOps",
+    "ai": "AI",
+}
+
+def cv_skill_label(category: str) -> str:
+    key = category.strip().lower()
+    if key in CV_SKILL_LABELS:
+        return CV_SKILL_LABELS[key]
+    return category.replace("_", " & ").title()
+
+def select_cv_certs(timeline: list, mode: str = "all", limit: int | None = None) -> list:
+    """Return certifications for the CV.
+
+    mode=\"all\" keeps every cert (compact one-pager). mode=\"featured\" keeps
+    only entries with cv.featured, falling back to all if none are flagged.
+    """
+    certs = [e for e in timeline if e.get("category") == "certification"]
+    if mode == "featured":
+        featured = [e for e in certs if (e.get("cv") or {}).get("featured")]
+        pool = featured if featured else certs
+    else:
+        pool = certs
+    ordered = sorted(pool, key=lambda x: x.get("order", 0), reverse=True)
+    if limit is None:
+        return ordered
+    return ordered[:limit]
+
+
+def select_featured_certs(timeline: list, limit: int = 6) -> list:
+    return select_cv_certs(timeline, mode="featured", limit=limit)
+
+def extract_cv_bullets(entry: dict, max_bullets: int) -> list:
+    cv = entry.get("cv") or {}
+    if cv.get("bullets"):
+        return list(cv["bullets"])[:max_bullets]
+    details = (entry.get("modalContent") or {}).get("details") or []
+    bullets = []
+    for d in details:
+        d = (d or "").rstrip()
+        if d.startswith("  •"):
+            bullets.append(d[3:].strip())
+        elif d.startswith("•"):
+            bullets.append(d[1:].strip())
+    return bullets[:max_bullets]
+
+def format_oneliner(entry: dict) -> str:
+    cv = entry.get("cv") or {}
+    if cv.get("line"):
+        return cv["line"]
+    company = entry.get("company", "")
+    title = entry.get("title", "")
+    start = (entry.get("startDate") or "").split()[-1] if entry.get("startDate") else ""
+    end = (entry.get("endDate") or "").split()[-1] if entry.get("endDate") else ""
+    years = f"{start}–{end}" if start or end else ""
+    return f"{company} · {title} · {years}".strip(" ·")
+
 class ResumeSyncer:
     def __init__(self):
         self.data = None
-        self.sections_dir = Path("src/sections")
+        # CV = full dossier; Resume = curated one-pager
+        self.cv_sections_dir = Path("src/sections/cv")
+        self.resume_sections_dir = Path("src/sections/resume")
+        # Back-compat alias used by dense writers
+        self.sections_dir = self.cv_sections_dir
         
     def fetch_data(self, url="https://marcuscjh.github.io/data.json"):
         """Fetch data.json from portfolio"""
@@ -26,12 +101,14 @@ class ResumeSyncer:
             print(f"Error fetching data: {e}")
             return False
     
-    def load_local_data(self, filepath="data2.json"):
+    def load_local_data(self, filepath=None):
         """Load data.json from local file"""
+        candidates = [Path(filepath)] if filepath else [Path("data.json"), Path("data2.json")]
+        data_path = next((path for path in candidates if path.exists()), candidates[0])
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(data_path, 'r', encoding='utf-8') as f:
                 self.data = json.load(f)
-            print("Local data loaded successfully")
+            print(f"Local data loaded successfully from {data_path}")
             return True
         except Exception as e:
             print(f"Error loading local data: {e}")
@@ -315,6 +392,188 @@ class ResumeSyncer:
         content += "    }}\n \\end{itemize}"
         
         self._write_section('skills.tex', content)
+
+    def update_cv_header(self):
+        """Write the compact CV header."""
+        config = self.data.get("config", {})
+        cv_config = config.get("cv") or {}
+        social = self.data.get("social", [])
+        name = self._escape_latex(config.get("real_name") or config.get("name", ""))
+        title = self._escape_latex(cv_config.get("title") or config.get("title", ""))
+        email = config.get("email", "")
+        website = config.get("website", "")
+        linkedin = next(
+            (
+                item.get("url", "")
+                for item in social
+                if item.get("platform", "").lower() == "linkedin"
+            ),
+            "",
+        )
+
+        lines = [
+            "% Generated by sync_resume.py",
+            f"\\cvHeader{{{name}}}{{{title}}}",
+            "\\cvPhoto{assets/photo.jpg}",
+        ]
+        if email:
+            escaped_email = self._escape_latex(email)
+            lines.append(
+                f"\\cvContact{{\\cvIconEmail}}{{\\href{{mailto:{email}}}{{{escaped_email}}}}}"
+            )
+        if website:
+            display = website.replace("https://", "").replace("http://", "").rstrip("/")
+            lines.append(
+                f"\\cvContact{{\\cvIconWebsite}}{{\\href{{{website}}}{{{self._escape_latex(display)}}}}}"
+            )
+        if linkedin:
+            display = linkedin.replace("https://", "").replace("http://", "").replace("www.", "").rstrip("/")
+            lines.append(
+                f"\\cvContact{{\\cvIconLinkedIn}}{{\\href{{{linkedin}}}{{{self._escape_latex(display)}}}}}"
+            )
+        self._write_cv_section("header.tex", "\n".join(lines))
+
+    def update_cv_summary(self):
+        """Write the CV-specific summary, falling back to a shortened resume summary."""
+        config = self.data.get("config", {})
+        cv_summary = (config.get("cv") or {}).get("summary")
+        summary = cv_summary or config.get("summary", "")
+        if not cv_summary and len(summary) > 320:
+            summary = summary[:317].rsplit(" ", 1)[0] + "..."
+        content = (
+            "% Generated by sync_resume.py\n"
+            "\\cvSection{Summary}\n"
+            f"\\cvSummary{{{self._escape_latex(summary)}}}"
+        )
+        self._write_cv_section("summary.tex", content)
+
+    def update_cv_experience(self):
+        """Write featured, compact, and earlier experience entries."""
+        entries = sorted(
+            (item for item in self.data.get("timeline", []) if item.get("category") == "work"),
+            key=lambda item: item.get("order", 0),
+            reverse=True,
+        )
+        lines = ["% Generated by sync_resume.py", "\\cvSection{Experience}"]
+        earlier = []
+
+        for entry in entries:
+            density = infer_cv_density(entry)
+            if density == "omit":
+                continue
+            if density == "oneliner":
+                earlier.append(format_oneliner(entry))
+                continue
+
+            company = self._escape_latex(entry.get("company", ""))
+            title = self._escape_latex(entry.get("title", ""))
+            dates = self._format_years(entry)
+            location = self._escape_latex((entry.get("modalContent") or {}).get("location", ""))
+            lines.append(f"\\cvExperience{{{company}}}{{{title}}}{{{dates}}}{{{location}}}")
+
+            if density == "featured":
+                roles = (entry.get("cv") or {}).get("roles") or []
+                if roles:
+                    for role in roles:
+                        if role.get("line"):
+                            lines.append(f"\\cvRoleLine{{{self._escape_latex(role['line'])}}}")
+                            continue
+                        role_title = self._escape_latex(role.get("title", ""))
+                        years = self._escape_latex(role.get("years", ""))
+                        lines.append(f"\\cvRole{{{role_title}}}{{{years}}}")
+                        for bullet in role.get("bullets") or []:
+                            lines.append(f"\\cvBullet{{{self._escape_latex(bullet)}}}")
+                else:
+                    for bullet in extract_cv_bullets(entry, max_bullets=5):
+                        lines.append(f"\\cvBullet{{{self._escape_latex(bullet)}}}")
+            else:
+                for bullet in extract_cv_bullets(entry, max_bullets=2):
+                    lines.append(f"\\cvBullet{{{self._escape_latex(bullet)}}}")
+
+        if earlier:
+            earlier_text = " \\\\ ".join(self._escape_latex(item) for item in earlier)
+            lines.append(f"\\cvEarlier{{{earlier_text}}}")
+        self._write_cv_section("experience.tex", "\n".join(lines))
+
+    def update_cv_skills(self):
+        """Write skill groups as CV pills."""
+        skills = self.data.get("skills", {})
+        cv_config = (self.data.get("config", {}).get("cv") or {})
+        requested_order = cv_config.get("skillOrder") or list(skills)
+        categories = list(requested_order) + [
+            category for category in skills if category not in requested_order
+        ]
+        lines = ["% Generated by sync_resume.py", "\\cvSection{Skills}"]
+        for category in categories:
+            technologies = skills.get(category) or []
+            if not technologies:
+                continue
+            label = self._escape_latex(cv_skill_label(category))
+            pills = " ".join(
+                f"\\cvPill{{{self._escape_latex(technology)}}}"
+                for technology in technologies
+            )
+            lines.append(f"\\cvSkillGroup{{{label}}}{{{pills}}}")
+        self._write_cv_section("skills.tex", "\n".join(lines))
+
+    def update_cv_certifications(self):
+        """Write every certification as a description | year table."""
+        lines = [
+            "% Generated by sync_resume.py",
+            "\\cvSection{Certifications}",
+            "\\begin{cvCertTable}",
+        ]
+        for entry in select_cv_certs(self.data.get("timeline", []), mode="all"):
+            title = self._escape_latex(entry.get("title", ""))
+            issuer = self._escape_latex(entry.get("company", ""))
+            year = self._escape_latex(
+                (entry.get("startDate") or "").split()[-1]
+                if entry.get("startDate")
+                else ""
+            )
+            lines.append(f"\\cvCertification{{{title}}}{{{issuer}}}{{{year}}}")
+        lines.append("\\end{cvCertTable}")
+        self._write_cv_section("certifications.tex", "\n".join(lines))
+
+    def update_cv_education(self):
+        """Write compact education entries."""
+        entries = sorted(
+            (
+                item
+                for item in self.data.get("timeline", [])
+                if item.get("category") == "education"
+            ),
+            key=lambda item: item.get("order", 0),
+            reverse=True,
+        )
+        lines = ["% Generated by sync_resume.py", "\\cvSection{Education}"]
+        for entry in entries:
+            school = self._escape_latex(entry.get("company", ""))
+            title = self._escape_latex(entry.get("title", ""))
+            years = self._format_years(entry)
+            location = self._escape_latex((entry.get("modalContent") or {}).get("location", ""))
+            lines.append(f"\\cvEducation{{{school}}}{{{title}}}{{{years}}}{{{location}}}")
+        self._write_cv_section("education.tex", "\n".join(lines))
+
+    def sync_cv(self):
+        """Generate curated Resume sections (one-pager)."""
+        self.resume_sections_dir.mkdir(parents=True, exist_ok=True)
+        self.update_cv_header()
+        self.update_cv_summary()
+        self.update_cv_experience()
+        self.update_cv_skills()
+        self.update_cv_certifications()
+        self.update_cv_education()
+
+    def _format_years(self, entry):
+        """Return a compact year range for a timeline entry."""
+        start = (entry.get("startDate") or "").split()[-1] if entry.get("startDate") else ""
+        end = (entry.get("endDate") or "").split()[-1] if entry.get("endDate") else ""
+        if start and end:
+            if start == end:
+                return self._escape_latex(start)
+            return self._escape_latex(f"{start}–{end}")
+        return self._escape_latex(start or end)
     
     def _validate_data(self):
         """Validate that required data structure exists"""
@@ -373,18 +632,26 @@ class ResumeSyncer:
         return text
     
     def _write_section(self, filename, content):
-        """Write content to a section file"""
-        filepath = self.sections_dir / filename
+        """Write a full CV section."""
+        self.cv_sections_dir.mkdir(parents=True, exist_ok=True)
+        filepath = self.cv_sections_dir / filename
         try:
             with open(filepath, 'w', encoding='utf-8') as f:
                 f.write(content)
-            print(f"Updated {filename}")
+            print(f"Updated cv/{filename}")
         except Exception as e:
             print(f"Error writing {filename}: {e}")
+
+    def _write_cv_section(self, filename, content):
+        """Write a curated Resume section (historically named update_cv_*)."""
+        self.resume_sections_dir.mkdir(parents=True, exist_ok=True)
+        filepath = self.resume_sections_dir / filename
+        filepath.write_text(content, encoding="utf-8")
+        print(f"Updated resume/{filename}")
     
-    def sync_all(self, use_local=False):
-        """Sync all sections"""
-        print("Starting resume sync...")
+    def sync_all(self, use_local=False, target="all"):
+        """Sync CV (full) and/or Resume (curated) sections."""
+        print(f"Starting {target} sync...")
         
         # Load data
         if use_local:
@@ -399,28 +666,63 @@ class ResumeSyncer:
             print("Data validation failed")
             return False
         
-        # Update all sections
-        self.update_header()
-        self.update_summary()
-        self.update_experience()
-        self.update_education()
-        self.update_certifications()
-        self.update_projects()
-        self.update_skills()
+        # CV = full dossier
+        if target in {"cv", "all"}:
+            self.update_header()
+            self.update_summary()
+            self.update_experience()
+            self.update_education()
+            self.update_certifications()
+            self.update_projects()
+            self.update_skills()
+
+        # Resume = curated one-pager
+        if target in {"resume", "all"}:
+            self.sync_cv()
         
-        print("Resume sync completed!")
+        print(f"{target.title()} sync completed!")
         return True
 
-def main():
+def resolve_use_local(source="auto", local_exists=None):
+    """Decide whether to load local data.json.
+
+    local: always local; remote: always remote;
+    auto: local if data.json/data2.json exists, otherwise remote.
+    """
+    if source == "local":
+        return True
+    if source == "remote":
+        return False
+    if local_exists is None:
+        local_exists = os.path.exists("data.json") or os.path.exists("data2.json")
+    return bool(local_exists)
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        description="Generate LaTeX sections: CV (full dossier) and/or Resume (curated one-pager)"
+    )
+    parser.add_argument(
+        "--target",
+        choices=("resume", "cv", "all"),
+        default="all",
+        help="cv=full dossier, resume=curated one-pager, all=both (default: all)",
+    )
+    parser.add_argument(
+        "--source",
+        choices=("local", "remote", "auto"),
+        default="auto",
+        help="data source: local data.json, remote portfolio, or auto "
+             "(local if present, else remote) (default: auto)",
+    )
+    args = parser.parse_args(argv)
     syncer = ResumeSyncer()
-    
-    # Check if data2.json exists locally
-    if os.path.exists('data2.json'):
-        print("Found local data2.json, using local data...")
-        syncer.sync_all(use_local=True)
-    else:
-        print("No local data2.json found, fetching from portfolio...")
-        syncer.sync_all(use_local=False)
+
+    use_local = resolve_use_local(args.source)
+    print(f"Data source: {'local' if use_local else 'remote'} (--source {args.source})")
+    ok = syncer.sync_all(use_local=use_local, target=args.target)
+    if not ok:
+        raise SystemExit(1)
 
 if __name__ == "__main__":
     main()

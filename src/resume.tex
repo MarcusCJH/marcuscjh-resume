@@ -1,35 +1,21 @@
 %-------------------------
-% Resume in Latex
+% Resume (curated one-pager) in LaTeX
 % Author : Marcus Chan
-% Based off of: https://github.com/jakegut/resume
 % License : MIT
 %------------------------
 
-\documentclass[letterpaper,11pt]{article}
-
-% Load custom formatting
-\usepackage{styles/formatting}
-
+\documentclass[letterpaper,10pt]{article}
+\usepackage{styles/resume-formatting}
 \begin{document}
-
-%----------HEADING----------
-\input{sections/header}
-
-%-----------SUMMARY-----------
-%\input{sections/summary}
-
-%-----------EXPERIENCE-----------
-\input{sections/experience}
-
-%%-----------PROGRAMMING SKILLS-----------
-\input{sections/skills}
-
-%-----------CERTIFICATIONS-----------
-\input{sections/certifications}
-
-%-----------EDUCATION-----------
-\input{sections/education}
-
-
-
-\end{document} 
+\input{sections/resume/header}
+\cvRenderHeader
+\input{sections/resume/summary}
+\vspace{2pt}
+\begin{cvBody}
+\input{sections/resume/experience}
+\input{sections/resume/education}
+\cvColumnBreak
+\input{sections/resume/skills}
+\input{sections/resume/certifications}
+\end{cvBody}
+\end{document}

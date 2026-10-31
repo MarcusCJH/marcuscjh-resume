@@ -1,4 +1,4 @@
-## LaTeX
+## LaTeX aux
 *.aux
 *.lof
 *.log
@@ -28,25 +28,32 @@ latex.out/
 *-blx.bib
 *.run.xml
 
-## Core latex/pdflatex auxiliary files
-*.aux
-*.lof
-*.log
-*.lot
-*.fls
-*.out
-*.toc
-*.fmt
-*.fot
-*.cb
-*.cb2
+## Build output
+out/
+auxil/
 
-## IDE specific files
+## Local scratch / previews
+.superpowers/
+tmp_cv_preview/
+.cursor/
+
+## Python
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+*.pyc
+
+## IDE
 .idea/
 .vscode/
 *.swp
 *.swo
 
-## Build directory
-out/
-auxil/ 
+## OS
+.DS_Store
+Thumbs.db
+
+## One-off local copies (keep docs/*.pdf published outputs only)
+/CV_*.pdf
+/docs/photo.*

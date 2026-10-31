@@ -1,0 +1,64 @@
+{
+  "config": {
+    "real_name": "Marcus Chan",
+    "email": "marcuschanjh@gmail.com",
+    "website": "https://marcuscjh.com",
+    "cv": {
+      "title": "Technical Lead · Cloud & Full-Stack",
+      "summary": "Technical lead and hands-on engineer with 10+ years delivering cloud-native and GenAI systems on AWS..."
+    }
+  },
+  "social": [
+    {
+      "platform": "LinkedIn",
+      "url": "https://www.linkedin.com/in/marcuschanjh"
+    }
+  ],
+  "skills": {
+    "languages": ["TypeScript", "Python"],
+    "aws": ["Lambda", "CDK"]
+  },
+  "showcase": [],
+  "timeline": [
+    {
+      "category": "work",
+      "company": "Accenture",
+      "title": "Lead Engineer",
+      "cv": {
+        "density": "featured",
+        "roles": [
+          {
+            "title": "Technical Lead",
+            "years": "2024 – Present",
+            "bullets": ["Led architecture", "Mentored engineers"]
+          }
+        ]
+      }
+    },
+    {
+      "category": "work",
+      "company": "Whale Cloud",
+      "cv": {
+        "density": "compact",
+        "bullets": ["Delivered BI solutions"]
+      }
+    },
+    {
+      "category": "work",
+      "company": "Veev",
+      "cv": {
+        "density": "oneliner",
+        "line": "Veev · Dev · 2017 — e-learning"
+      }
+    },
+    {
+      "category": "certification",
+      "title": "AWS Certified Developer",
+      "cv": { "featured": true }
+    },
+    {
+      "category": "certification",
+      "title": "Other Cert"
+    }
+  ]
+}
