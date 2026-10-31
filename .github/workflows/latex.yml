@@ -29,7 +29,7 @@ jobs:
           python-version: '3.x'
 
       - name: 🔄 Sync data.json
-        run: python sync_resume.py
+        run: python sync_resume.py --source remote --target all
 
       - name: 🧠 Check for changes
         id: check
@@ -37,7 +37,7 @@ jobs:
           SYNC_CHANGED=$(git diff HEAD --name-only src/sections/ | grep -E '\.tex$' || true)
           
           if [ "${{ github.event_name }}" == "push" ]; then
-            PUSH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '\.tex$|sections/' || true)
+            PUSH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^(src/resume\.tex|src/cv\.tex|src/styles/.*\.sty|src/sections/|src/assets/photo\.jpg)' || true)
             CHANGED=$(echo -e "$PUSH_CHANGED\n$SYNC_CHANGED" | grep -v '^$' | sort -u)
           else
             CHANGED="$SYNC_CHANGED"
@@ -50,19 +50,39 @@ jobs:
           
           echo "has_changes=true" >> $GITHUB_OUTPUT
 
-      - name: 🧱 Build PDF
+      - name: 🧱 Build CV PDF (full dossier)
+        if: steps.check.outputs.has_changes == 'true'
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: cv.tex
+          working_directory: src
+
+      - name: 🧱 Build Resume PDF (curated one-pager)
         if: steps.check.outputs.has_changes == 'true'
         uses: xu-cheng/latex-action@v4
         with:
           root_file: resume.tex
           working_directory: src
+          latexmk_use_xelatex: true
+
+      - name: 📏 Assert Resume is exactly one page
+        if: steps.check.outputs.has_changes == 'true'
+        run: |
+          python -m pip install --quiet pypdf
+          python - <<'EOF'
+          from pypdf import PdfReader
+          pages = len(PdfReader("src/resume.pdf").pages)
+          print(f"resume.pdf pages: {pages}")
+          assert pages == 1, f"Resume must be exactly 1 page, got {pages}"
+          EOF
 
       - name: 📦 Stage and prepare PR
         if: steps.check.outputs.has_changes == 'true'
         run: |
           mkdir -p docs
+          mv src/cv.pdf docs/cv.pdf
           mv src/resume.pdf docs/resume.pdf
-          git add -A src/sections/ docs/resume.pdf
+          git add -A src/sections/ docs/resume.pdf docs/cv.pdf
 
       - name: 📅 Generate date
         if: steps.check.outputs.has_changes == 'true'
@@ -75,16 +95,16 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: |
-            [GA] Update resume - ${{ steps.date.outputs.date }} [skip ci]
+            [GA] Update resume and CV - ${{ steps.date.outputs.date }} [skip ci]
             
             - Sections synced from data.json
-            - PDF rebuilt
-          title: "[GA] Update resume - ${{ steps.date.outputs.date }}"
+            - Resume and CV PDFs rebuilt
+          title: "[GA] Update resume and CV - ${{ steps.date.outputs.date }}"
           body: |
-            Automated update of resume from GitHub Actions
+            Automated update of resume and CV from GitHub Actions
             
             - Sections synced from data.json
-            - PDF rebuilt with latest data
+            - Resume and CV PDFs rebuilt with latest data
           branch: update-resume
           delete-branch: true
           assignees: MarcusCJH

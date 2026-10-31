@@ -519,7 +519,9 @@
 
         /* Download Button */
         .download-section {
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
             margin-top: 20px;
         }
 
@@ -733,7 +735,10 @@
                     </div>
                     <div class="download-section">
                         <a href="resume.pdf" class="download-btn" download="MarcusCJH_Resume_${new Date().toISOString().slice(0, 10)}.pdf">
-                            <i class="fas fa-cloud-download-alt"></i> PDF
+                            <i class="fas fa-cloud-download-alt"></i> Resume
+                        </a>
+                        <a href="cv.pdf" class="download-btn" download="MarcusCJH_CV_${new Date().toISOString().slice(0, 10)}.pdf">
+                            <i class="fas fa-cloud-download-alt"></i> CV (full)
                         </a>
                     </div>
                 </div>
