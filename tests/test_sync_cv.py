@@ -127,3 +127,31 @@ def test_main_auto_uses_local_when_data_json_present(monkeypatch, tmp_path):
     monkeypatch.chdir(tmp_path)
     sr.main(["--target", "all"])
     assert calls == {"use_local": True, "target": "all"}
+
+
+def test_build_pdf_metadata_from_fixture():
+    data = load_fixture()
+    meta = sr.build_pdf_metadata(data)
+    assert meta["title"] == "Marcus Chan — Professional CV/Resume"
+    assert meta["author"] == "Marcus Chan"
+    assert meta["subject"].startswith("Technical lead and hands-on engineer")
+    assert "Lead Engineer" in meta["keywords"]
+    assert "AWS" in meta["keywords"]
+    assert "marcuscjh.com" in meta["keywords"]
+    assert meta["creator"] == "marcuscjh-resume (https://marcuscjh.com)"
+
+
+def test_update_pdf_metadata_writes_hypersetup(tmp_path):
+    syncer = sr.ResumeSyncer()
+    syncer.data = load_fixture()
+    syncer.pdf_metadata_path = tmp_path / "pdf-metadata.tex"
+    syncer.update_pdf_metadata()
+    text = syncer.pdf_metadata_path.read_text(encoding="utf-8")
+    assert "\\hypersetup" in text
+    assert "pdftitle=" in text
+    assert "pdfauthor=" in text
+    assert "pdfsubject=" in text
+    assert "pdfkeywords=" in text
+    assert "pdfcreator=" in text
+    assert "marcuscjh.com" in text
+    assert "pdfproducer" not in text
