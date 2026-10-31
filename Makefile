@@ -10,7 +10,7 @@ RESUME_PDF := out/resume.pdf
 
 help:
 	@echo.
-	@echo   sync         sync CV + Resume sections from data.json
+	@echo   sync         sync CV + Resume sections from www.marcuscjh.com/data.json
 	@echo   cv           compile out/cv.pdf          (full dossier, pdfLaTeX)
 	@echo   resume       compile out/resume.pdf      (curated one-pager, XeLaTeX)
 	@echo   pdf          alias for resume
@@ -22,8 +22,8 @@ help:
 	@echo.
 
 sync:
-	@echo [sync] Updating sections from data.json...
-	@$(PYTHON) sync_resume.py --target all
+	@echo [sync] Updating sections (local data.json if present, else remote)...
+	@$(PYTHON) sync_resume.py --source auto --target all
 	@echo [sync] Done.
 
 cv:

@@ -88,8 +88,8 @@ class ResumeSyncer:
         # Back-compat alias used by dense writers
         self.sections_dir = self.cv_sections_dir
         
-    def fetch_data(self, url="https://marcuscjh.github.io/data.json"):
-        """Fetch data.json from portfolio"""
+    def fetch_data(self, url="https://www.marcuscjh.com/data.json"):
+        """Fetch data.json from the live portfolio (source of truth)."""
         import urllib.request
         try:
             print(f"Fetching data from {url}...")
@@ -128,13 +128,14 @@ class ResumeSyncer:
             return
         
         # Build contact links - email, portfolio website, and LinkedIn
-        contact_links = [f"\\href{{mailto:{email}}}{{\\underline{{{email}}}}}"]
+        # No \underline: ATS-friendly + matches cvaccent hyperref styling
+        contact_links = [f"\\href{{mailto:{email}}}{{{email}}}"]
         
         # Add portfolio website if available
         portfolio_url = config.get('website', '')
         if portfolio_url:
             display_name = portfolio_url.replace('https://', '').replace('http://', '')
-            contact_links.append(f"\\href{{{portfolio_url}}}{{\\underline{{{display_name}}}}}")
+            contact_links.append(f"\\href{{{portfolio_url}}}{{{display_name}}}")
         
         # Add LinkedIn if available
         linkedin_entry = next((s for s in social if s.get('platform', '').lower() == 'linkedin'), None)
@@ -143,11 +144,11 @@ class ResumeSyncer:
             if linkedin_url:
                 # Extract display name from LinkedIn URL (e.g., "linkedin.com/in/marcuschanjh")
                 display_name = linkedin_url.replace('https://', '').replace('http://', '').replace('www.', '')
-                contact_links.append(f"\\href{{{linkedin_url}}}{{\\underline{{{display_name}}}}}")
+                contact_links.append(f"\\href{{{linkedin_url}}}{{{display_name}}}")
         
         content = f"""%----------HEADING----------
 \\begin{{center}}
-    \\textbf{{\\Huge \\scshape {name}}} \\\\ \\vspace{{1pt}}
+    \\textbf{{\\Huge {name}}} \\\\ \\vspace{{1pt}}
     \\small {' $|$ '.join(contact_links)}
 \\end{{center}}"""
         
@@ -684,10 +685,11 @@ class ResumeSyncer:
         return True
 
 def resolve_use_local(source="auto", local_exists=None):
-    """Decide whether to load local data.json.
+    """Decide whether to load a local data.json.
 
-    local: always local; remote: always remote;
-    auto: local if data.json/data2.json exists, otherwise remote.
+    auto (default): use local data.json/data2.json if present (testing), else remote
+    remote: always fetch https://www.marcuscjh.com/data.json
+    local: always local (fails if missing)
     """
     if source == "local":
         return True
@@ -712,8 +714,8 @@ def main(argv=None):
         "--source",
         choices=("local", "remote", "auto"),
         default="auto",
-        help="data source: local data.json, remote portfolio, or auto "
-             "(local if present, else remote) (default: auto)",
+        help="auto (default): local data.json if present for testing, else "
+             "https://www.marcuscjh.com/data.json; remote/local force one source",
     )
     args = parser.parse_args(argv)
     syncer = ResumeSyncer()

@@ -98,3 +98,32 @@ def test_main_remote_source_does_not_use_local(monkeypatch):
     monkeypatch.setattr(sr.ResumeSyncer, "sync_all", fake_sync_all)
     sr.main(["--source", "remote", "--target", "cv"])
     assert calls == {"use_local": False, "target": "cv"}
+
+
+def test_main_defaults_to_auto_prefers_remote_when_no_local(monkeypatch, tmp_path):
+    calls = {}
+
+    def fake_sync_all(self, use_local=False, target="all"):
+        calls["use_local"] = use_local
+        calls["target"] = target
+        return True
+
+    monkeypatch.setattr(sr.ResumeSyncer, "sync_all", fake_sync_all)
+    monkeypatch.chdir(tmp_path)
+    sr.main(["--target", "all"])
+    assert calls == {"use_local": False, "target": "all"}
+
+
+def test_main_auto_uses_local_when_data_json_present(monkeypatch, tmp_path):
+    calls = {}
+
+    def fake_sync_all(self, use_local=False, target="all"):
+        calls["use_local"] = use_local
+        calls["target"] = target
+        return True
+
+    (tmp_path / "data.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(sr.ResumeSyncer, "sync_all", fake_sync_all)
+    monkeypatch.chdir(tmp_path)
+    sr.main(["--target", "all"])
+    assert calls == {"use_local": True, "target": "all"}

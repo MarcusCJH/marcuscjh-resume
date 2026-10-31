@@ -37,7 +37,7 @@ jobs:
           SYNC_CHANGED=$(git diff HEAD --name-only src/sections/ | grep -E '\.tex$' || true)
           
           if [ "${{ github.event_name }}" == "push" ]; then
-            PUSH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^(src/resume\.tex|src/cv\.tex|src/styles/.*\.sty|src/sections/|src/assets/photo\.jpg)' || true)
+            PUSH_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^(src/resume\.tex|src/cv\.tex|src/styles/.*\.sty|src/fonts/|src/sections/|src/assets/photo\.jpg)' || true)
             CHANGED=$(echo -e "$PUSH_CHANGED\n$SYNC_CHANGED" | grep -v '^$' | sort -u)
           else
             CHANGED="$SYNC_CHANGED"
