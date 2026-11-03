@@ -92,7 +92,7 @@
   \noindent
   {\color{cvaccent}\rule{28pt}{1.5pt}}%
   {\color{cvseparator}\rule{\dimexpr\textwidth-28pt\relax}{0.5pt}}%
-  \par\vspace{6pt}}
+  \par\vspace{4pt}}
 
 % ---------- Header ----------
 \newcommand{\cvPhotoSize}{0.72in}
@@ -147,7 +147,7 @@
 
 % ---------- Sections: sentence case + accent/border rule ----------
 \newcommand{\cvSection}[1]{%
-  \vspace{7pt}%
+  \vspace{5pt}%
   {\cvHeadline\color{cvlabel}#1\par}%
   \vspace{2pt}%
   \noindent
@@ -162,11 +162,11 @@
     \node[
       fill=cvgrouped,
       inner xsep=8pt,
-      inner ysep=5pt,
+      inner ysep=4pt,
       text width=\dimexpr\textwidth-20pt\relax,
       align=left,
       anchor=north west
-    ] (s) at (0,0) {\cvTypeBody\color{cvlabel}#1};
+    ] (s) at (0,0) {\cvFootnote\color{cvlabel}#1};
     \fill[cvaccent] ([xshift=-2pt]s.north west) rectangle (s.south west);
   \end{tikzpicture}%
   \par\vspace{1pt}}
@@ -232,7 +232,7 @@
   \noindent{\cvCaptionA\bfseries\color{cvsecondary}\cvCatLabel{#1}\par}%
   \vspace{1.5pt}%
   \noindent\raggedright #2\par
-  \vspace{4pt}}
+  \vspace{2.5pt}}
 
 % ---------- Certifications: two-column table (description | year) ----------
 \newenvironment{cvCertTable}{%
@@ -250,7 +250,7 @@
   {\cvCaptionA\color{cvlabel}#1}%
   &
   {\cvCaptionB\color{cvsecondary}#3}%
-  \\[2.8pt]}
+  \\[2.2pt]}
 
 % ---------- Education ----------
 \newcommand{\cvEducation}[4]{%
