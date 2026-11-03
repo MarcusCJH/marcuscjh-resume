@@ -1,15 +1,15 @@
-# Marcus's LaTeX Resume and CV 📄
+# Marcus's LaTeX Resume and CV
 
 A data-driven LaTeX project that generates two documents from the same portfolio data:
 
-- **Resume:** curated one-pager — selected highlights ([PDF](https://marcuscjh.github.io/marcuscjh-resume/resume.pdf))
-- **CV:** full dossier — everything you have ([PDF](https://marcuscjh.github.io/marcuscjh-resume/cv.pdf))
+- **Resume:** curated one-pager, selected highlights ([PDF](https://marcuscjh.github.io/marcuscjh-resume/resume.pdf))
+- **CV:** full dossier, everything you have ([PDF](https://marcuscjh.github.io/marcuscjh-resume/cv.pdf))
 
 [![View Documents](https://img.shields.io/badge/View-Resume%20%2B%20CV-blue)](https://marcuscjh.github.io/marcuscjh-resume/)
 [![Build Status](https://github.com/marcuscjh/marcuscjh-resume/workflows/Build%20and%20Deploy%20LaTeX%20Resume/badge.svg)](https://github.com/marcuscjh/marcuscjh-resume/actions)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-## ✨ Key Features
+## Key Features
 
 - **Data-Driven**: Single source of truth at [www.marcuscjh.com/data.json](https://www.marcuscjh.com/data.json)
 - **Dual Documents**: curated Resume + full CV from one data source
@@ -19,7 +19,7 @@ A data-driven LaTeX project that generates two documents from the same portfolio
 - **Scheduled Updates**: Checks the live portfolio data every 6 hours
 - **Live Preview**: GitHub Pages with instant download
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.7+
@@ -59,7 +59,7 @@ Portfolio 2026 tokens in `resume-formatting.sty`), with TeX Gyre Heros /
 Latin Modern Sans as fallbacks if those files are missing. CI rebuilds when
 `src/fonts/` changes.
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 .
@@ -81,7 +81,7 @@ Latin Modern Sans as fallbacks if those files are missing. CI rebuilds when
 └── out/
 ```
 
-## 📝 How It Works
+## How It Works
 
 ### Automated Workflow
 The GitHub Actions workflow automatically:
@@ -141,7 +141,7 @@ The GitHub Actions workflow automatically:
 Timeline entries may use a `cv` object with fields such as `density`,
 `bullets`, `line`, `roles`, and `featured`.
 
-## 🔧 Usage
+## Usage
 
 ### Automated Updates (Recommended)
 The workflow runs automatically:
@@ -162,11 +162,11 @@ make build
 ### Customize Data
 - Edit the portfolio data at www.marcuscjh.com (portfolio repo)
 - Workflow syncs and opens a PR within 6 hours
-- Or push .tex changes directly — workflow builds PDFs and creates a PR
-- For local testing, drop an untracked `data.json` in the repo root — `make sync` / `--source auto` will pick it up
+- Or push .tex changes directly: the workflow builds PDFs and creates a PR
+- For local testing, drop an untracked `data.json` in the repo root: `make sync` / `--source auto` will pick it up
 
 ---
 
 <div align="center">
-Made with ❤️ by Marcus
+Made by Marcus
 </div> 

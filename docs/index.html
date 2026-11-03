@@ -6,7 +6,7 @@
     <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="expires" content="0">
     <meta http-equiv="pragma" content="no-cache">
-    <title>Marcus Chan — Resume &amp; CV</title>
+    <title>Marcus Chan | Resume &amp; CV</title>
     <meta name="description" content="Technical Lead · Cloud &amp; Full-Stack. Download the curated resume or full CV.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -687,8 +687,8 @@
                                     const details = modal.details || [];
                                     const location = modal.location || '';
                                     const dateRange = item.endDate && item.endDate !== 'Present'
-                                        ? `${item.startDate} — ${item.endDate}`
-                                        : `${item.startDate} — Present`;
+                                        ? `${item.startDate} - ${item.endDate}`
+                                        : `${item.startDate} - Present`;
 
                                     let expHtml = `
                                         <article class="experience-item">
@@ -759,7 +759,7 @@
                                             <div class="edu-school">${escapeHtml(item.company || '')}</div>
                                             <div class="edu-degree">${escapeHtml(item.title || '')}</div>
                                             <div class="edu-meta">
-                                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> ${escapeHtml(item.startDate || '')}${item.endDate ? ' — ' + escapeHtml(item.endDate) : ''}</span>
+                                                <span><i class="fas fa-calendar-alt" aria-hidden="true"></i> ${escapeHtml(item.startDate || '')}${item.endDate ? ' - ' + escapeHtml(item.endDate) : ''}</span>
                                             </div>
                                         </div>`).join('')}
                                 </div>

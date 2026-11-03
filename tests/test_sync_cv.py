@@ -61,9 +61,9 @@ def test_format_oneliner_prefers_cv_line():
         "title": "Intern",
         "startDate": "2013",
         "endDate": "2013",
-        "cv": {"line": "Hitachi · Intern · 2013 — graph viz"},
+        "cv": {"line": "Hitachi · Intern · 2013 - graph viz"},
     }
-    assert sr.format_oneliner(entry) == "Hitachi · Intern · 2013 — graph viz"
+    assert sr.format_oneliner(entry) == "Hitachi · Intern · 2013 - graph viz"
 
 
 def test_sync_cv_experience_contains_featured_and_earlier_oneliner(tmp_path):
@@ -132,7 +132,7 @@ def test_main_auto_uses_local_when_data_json_present(monkeypatch, tmp_path):
 def test_build_pdf_metadata_from_fixture():
     data = load_fixture()
     meta = sr.build_pdf_metadata(data)
-    assert meta["title"] == "Marcus Chan — Professional CV/Resume"
+    assert meta["title"] == "Marcus Chan | Professional CV/Resume"
     assert meta["author"] == "Marcus Chan"
     assert meta["subject"].startswith("Technical lead and hands-on engineer")
     assert "Lead Engineer" in meta["keywords"]
